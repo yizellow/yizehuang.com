@@ -2,12 +2,30 @@
 import { gsap } from "gsap";
 import { Icon } from "@iconify/vue";
 
+const frameRef = ref(null);
+
 onMounted(() => {
+  const frame = frameRef.value;
+
   gsap.fromTo(
     ".navbar-icon",
     { rotation: 0 },
-    { ease: "steps(10)", rotation: 360, x: 0, duration: 0.5, stagger: 0.4 }
+    { ease: "steps(10)", rotation: 360, x: 0, duration: 0.4, stagger: 0.3 }
   );
+  gsap.fromTo(
+    ".navbar-frame",
+    { opacity: 0 },
+    { opacity: 1, ease: "steps(10)", duration: 0.8 }
+  );
+
+  frame.addEventListener("mouseenter", () => {
+    gsap.to(frame, { ogpacity: 0.2, duration: 0.3 }); // 降低透明度
+  });
+
+  // 滑鼠移出 → 淡入
+  frame.addEventListener("mouseleave", () => {
+    gsap.to(frame, { opacity: 1, duration: 0.8 }); // 回來原本透明度
+  });
 });
 </script>
 <template>
@@ -47,7 +65,8 @@ onMounted(() => {
 
   <div class="flex justify-center items-center">
     <div
-      class="w-10/12 md:w-6/10 rounded-full flex flex-col justify-center items-center p-2 mt-2 min-h-8 sm:min-h-14 border-1 border-secondary shadow-md"
+      ref="frameRef"
+      class="navbar-frame w-10/12 md:w-6/10 rounded-full flex flex-col justify-center items-center p-2 mt-2 min-h-8 sm:min-h-14 border-1 border-secondary shadow-md"
     >
       <div class="flex w-full items-center justify-center">
         <Icon
