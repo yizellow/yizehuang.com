@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @plugin "daisyui";
-
 @plugin "daisyui/theme" {
   name: "yizellow";
   default: true;
@@ -34,11 +33,4 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-}
-
-
-:root {
-  --menu-btn-bg: #a3a3ff;
-  --menu-btn-color: #fff;
-  /* 你可以自訂更多全域變數 */
 }

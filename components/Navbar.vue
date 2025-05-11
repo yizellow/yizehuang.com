@@ -104,7 +104,7 @@ function onBtnLeave(idx) {
   <div class="flex justify-center items-center">
     <div
       ref="frameRef"
-      class="navbar-frame flex flex-col justify-center items-center p-2 mt-2 min-h-14 border-1 border-secondary shadow-md"
+      class="navbar-frame flex flex-col justify-center items-center w-2/5 rounded-full opacity-0 p-2 mt-2 min-h-14 border-1 border-[var(--color-secondary)] shadow-md"
       @mouseenter="onEnter"
       @mouseleave="onLeave"
     >
@@ -115,14 +115,13 @@ function onBtnLeave(idx) {
             :key="item"
             :class="[
               'navbar-text',
+              'geo',
               `navbar-text-btn-${idx}`,
               'flex-1',
               'mx-2',
               'py-1',
               'text-center',
-              'text-xs',
-              'sm:text-base',
-              'md:text-lg',
+              'text-2xl',
               'rounded-lg',
               'cursor-pointer',
             ]"
@@ -137,11 +136,10 @@ function onBtnLeave(idx) {
             v-for="icon in icons"
             :key="icon"
             :icon="icon"
-            class="navbar-icon flex-1 px-2 text-center text-xl sm:text-2xl"
+            class="navbar-icon flex-1 px-2 text-center text-2xl"
           />
         </div>
       </div>
     </div>
   </div>
 </template>
-<style scoped></style>
