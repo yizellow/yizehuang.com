@@ -1,3 +1,3 @@
 <template>
-  <Navbar />
+  <NavbarDesktop />
 </template>
