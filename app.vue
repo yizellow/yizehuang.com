@@ -1,8 +1,5 @@
 <template>
-  <NavbarMobile />
-  <main><NuxtPage></NuxtPage></main>
+  <NuxtPage></NuxtPage>
 </template>
 
-<script setup>
-import NavbarMobile from "~/components/NavbarMobile.vue";
-</script>
+<script setup></script>

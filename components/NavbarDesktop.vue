@@ -56,8 +56,8 @@ onMounted(() => {
   );
   gsap.fromTo(
     ".navbar-frame",
-    { opacity: 0 },
-    { opacity: 1, ease: "steps(10)", duration: 0.8 }
+    { y: -96, opacity: 0 },
+    { y: 0, opacity: 1, ease: "power1.out", duration: 0.5 }
   );
   gsap.set(frame, { borderRadius: "40px", width: "40%" });
 });
@@ -104,7 +104,7 @@ function onBtnLeave(idx) {
   <div class="flex justify-center items-center">
     <div
       ref="frameRef"
-      class="navbar-frame flex flex-col justify-center items-center w-2/5 rounded-full opacity-0 p-2 mt-2 min-h-14 border-1 border-[var(--color-primary)] shadow-md"
+      class="navbar-frame flex flex-col justify-center items-center w-2/5 rounded-full opacity-0 p-2 mt-2 min-h-14 border-1 border-[var(--color-secondary)] shadow-md"
       @mouseenter="onEnter"
       @mouseleave="onLeave"
     >
