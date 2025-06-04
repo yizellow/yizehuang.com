@@ -1,7 +1,8 @@
 <script setup>
 import { gsap } from "gsap";
 import { Icon } from "@iconify/vue";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
+import { useRouter } from "vue-router";
 
 // DOM 參照
 const menuRef = ref(null);
@@ -13,6 +14,15 @@ const menuIconSwitch = ref(true);
 // 狀態與鎖
 const listShow = ref(false);
 const animating = ref(false);
+
+const menuItems = [
+  { label: "PROJECTS", to: "/projects" },
+  { label: "ABOUT", to: "/about" },
+  { label: "MEMBER", to: "/member" },
+  { label: "DONATE", to: "/donate" },
+];
+
+const router = useRouter();
 
 function toggleMenuIcon() {
   menuIconSwitch.value = !menuIconSwitch.value;
@@ -32,13 +42,14 @@ function toggleAnimation() {
 }
 
 // 切換動畫
-function expandNav() {
+async function expandNav() {
   toggleAnimation();
-
   toggleMenuIcon();
 
-  if (animating.value) return; // 防止動畫中重複點擊
+  if (animating.value) return;
   animating.value = true;
+
+  await nextTick();
 
   // 清除之前的動畫
   gsap.killTweensOf(navListRef.value);
@@ -68,50 +79,59 @@ function expandNav() {
     );
 
     // 項目淡入 + stagger
-    tl.fromTo(
-      navTitles.value,
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 0.1,
-        stagger: 0.03,
-        ease: "power4.in",
-        onComplete: () => {
-          animating.value = false;
+    if (navTitles.value && navTitles.value.length > 0) {
+      tl.fromTo(
+        navTitles.value,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.1,
+          stagger: 0.03,
+          ease: "power4.in",
+          onComplete: () => {
+            animating.value = false;
+          },
         },
-      },
-      "-=0.07"
-    );
+        "-=0.07"
+      );
+    } else {
+      animating.value = false;
+    }
   } else {
     // 收起動畫
     const tl = gsap.timeline();
-    tl.fromTo(
-      navTitles.value,
-      { opacity: 1 },
-      {
-        opacity: 0,
-        duration: 0.2,
-        stagger: {
-          each: 0.01, // 每個元素的延遲時間
-          from: "end", // 從最後一個開始
+    if (navTitles.value && navTitles.value.length > 0) {
+      tl.fromTo(
+        navTitles.value,
+        { opacity: 1 },
+        {
+          opacity: 0,
+          duration: 0.4,
+          stagger: {
+            each: 0.01,
+            from: "end",
+          },
+          ease: "power3.out",
+        }
+      );
+      tl.to(
+        navListRef.value,
+        {
+          scaleY: 0,
+          opacity: 0,
+          duration: 0.4,
+          ease: "power3.out",
+          onComplete: () => {
+            listShow.value = false;
+            animating.value = false;
+          },
         },
-        ease: "power3.out",
-      }
-    );
-    tl.to(
-      navListRef.value,
-      {
-        scaleY: 0,
-        opacity: 0,
-        duration: 0.2,
-        ease: "power3.out",
-        onComplete: () => {
-          listShow.value = false;
-          animating.value = false;
-        },
-      },
-      "<"
-    );
+        "<"
+      );
+    } else {
+      listShow.value = false;
+      animating.value = false;
+    }
   }
 }
 
@@ -133,6 +153,12 @@ onMounted(() => {
     duration: 0.5,
   });
 });
+
+router.afterEach(() => {
+  if (listShow.value) {
+    expandNav();
+  }
+});
 </script>
 
 <template>
@@ -142,7 +168,9 @@ onMounted(() => {
       class="flex flex-row justify-between items-center w-4/5 px-6 mt-2 min-h-12 rounded-full border border-[var(--color-secondary)] shadow-md"
     >
       <div>
-        <Icon icon="material-symbols:other-houses" class="home text-2xl" />
+        <NuxtLink to="/">
+          <Icon icon="material-symbols:other-houses" class="home text-2xl" />
+        </NuxtLink>
       </div>
 
       <div
@@ -170,14 +198,23 @@ onMounted(() => {
       ref="navListRef"
       class="nav-list flex flex-col justify-around items-center w-4/5 mt-2 rounded-2xl border border-[var(--color-secondary)] shadow-md overflow-hidden"
     >
-      <div
-        v-for="(item, index) in ['PROJECTS', 'ABOUT', 'MEMBER', 'DONATE']"
-        :key="index"
-        ref="navTitles"
-        class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0"
+      <NuxtLink
+        v-for="(item, index) in menuItems"
+        :key="item.label"
+        :to="item.to"
+        class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0 cursor-pointer"
       >
-        <p class="text-lg">{{ item }}</p>
-      </div>
+        <div
+          :ref="
+            (el) => {
+              if (el) navTitles[index] = el;
+            }
+          "
+          class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0 cursor-pointer"
+        >
+          <p class="text-lg">{{ item.label }}</p>
+        </div>
+      </NuxtLink>
     </nav>
   </div>
 </template>
