@@ -12,7 +12,13 @@ const icons = [
   "material-symbols:person",
   "material-symbols:coffee-sharp",
 ];
-const menuItems = ["HOME", "PROJECTS", "ABOUT", "MEMBER", "DONATE"];
+const menuItems = [
+  { label: "HOME", to: "/" },
+  { label: "PROJECTS", to: "/projects" },
+  { label: "ABOUT", to: "/about" },
+  { label: "MEMBER", to: "/member" },
+  { label: "DONATE", to: "/donate" },
+];
 
 watch(showText, (val) => {
   if (val) {
@@ -110,9 +116,9 @@ function onBtnLeave(idx) {
     >
       <div class="flex w-full items-center justify-center">
         <div v-show="showText" class="w-full flex items-center justify-center">
-          <a
+          <NuxtLink
             v-for="(item, idx) in menuItems"
-            :key="item"
+            :key="item.label"
             :class="[
               'navbar-text',
               'geo',
@@ -125,10 +131,10 @@ function onBtnLeave(idx) {
               'rounded-lg',
               'cursor-pointer',
             ]"
-            href="#"
+            :to="item.to"
             @mouseenter="onBtnEnter(idx)"
             @mouseleave="onBtnLeave(idx)"
-            >{{ item }}</a
+            >{{ item.label }}</NuxtLink
           >
         </div>
         <div v-show="!showText" class="w-full flex items-center justify-center">

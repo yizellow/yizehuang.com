@@ -6,5 +6,5 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="w-screen h-screen bg-green-900"></div>
+  <div class="w-screen h-screen bg-pink-900"></div>
 </template>
