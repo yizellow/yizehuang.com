@@ -16,10 +16,12 @@ const listShow = ref(false);
 const animating = ref(false);
 
 const menuItems = [
+  { label: "HOME", to: "/" },
   { label: "PROJECTS", to: "/projects" },
   { label: "ABOUT", to: "/about" },
-  { label: "MEMBER", to: "/member" },
+  // { label: "MEMBER", to: "/member" },
   { label: "DONATE", to: "/donate" },
+  { label: "CONTACT", to: "/contact" },
 ];
 
 const router = useRouter();

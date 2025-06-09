@@ -7,17 +7,20 @@ const frameRef = ref(null);
 const showText = ref(false);
 const icons = [
   "material-symbols:other-houses",
-  "material-symbols:background-grid-small-sharp",
-  "material-symbols:ar-stickers-sharp",
+  // "material-symbols:ar-stickers-sharp",
   "material-symbols:person",
+  "material-symbols:background-grid-small-sharp",
   "material-symbols:coffee-sharp",
+  "material-symbols:call-sharp",
 ];
 const menuItems = [
   { label: "HOME", to: "/" },
-  { label: "PROJECTS", to: "/projects" },
   { label: "ABOUT", to: "/about" },
-  { label: "MEMBER", to: "/member" },
+
+  { label: "PROJECTS", to: "/projects" },
+  // { label: "MEMBER", to: "/member" },
   { label: "DONATE", to: "/donate" },
+  { label: "CONTACT", to: "/contact" },
 ];
 
 watch(showText, (val) => {
