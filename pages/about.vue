@@ -1,7 +1,11 @@
 <template>
-  <main
-    class="bg-red-100 text-gray-900 flex flex-col items-center justify-center"
-  >
+  <main class="relative">
+    <!-- 疊加你的 Three.js 模型組件 -->
+    <div class="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
+      <Model :rotationY="modelRotationY" />
+    </div>
+
+    <!-- 你原本的內容 -->
     <section
       v-for="(content, idx) in sectionData"
       :key="idx"
@@ -18,6 +22,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import Model from "~/components/three.js/Model.vue";
 
 // ——— 四個 Section 的內容 ———
 const sectionData = [
@@ -51,12 +56,15 @@ const sectionData = [
 const sections = ref([]);
 let lastScrollY = 0;
 let scrollDirection = "down";
+const modelRotationY = ref(0);
 
 // 監聽滾動方向
 const onScroll = () => {
   const current = window.scrollY;
   scrollDirection = current > lastScrollY ? "down" : "up";
   lastScrollY = current;
+
+  modelRotationY.value = current * 0.2;
 };
 
 onMounted(() => {
@@ -89,6 +97,9 @@ onMounted(() => {
     window.removeEventListener("scroll", onScroll);
     observer.disconnect();
   });
+});
+onUnmounted(() => {
+  window.removeEventListener("scroll", onScroll);
 });
 </script>
 

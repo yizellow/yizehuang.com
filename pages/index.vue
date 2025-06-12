@@ -5,6 +5,7 @@ definePageMeta({
   layout: "default",
   noNavbarPadding: false,
 });
+
 </script>
 
 <template>
