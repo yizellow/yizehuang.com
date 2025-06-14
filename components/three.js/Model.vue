@@ -50,13 +50,15 @@ onMounted(() => {
     });
 
   const loader = new GLTFLoader();
-  loader.load("/three.js/model.glb", (gltf) => {
+  loader.load("/three.js/newModel.glb", (gltf) => {
     model = gltf.scene;
     scene.add(model);
 
     model.position.set(0, 0, 0);
     model.scale.set(0.5, 0.5, 0.5);
   });
+
+
 
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(1, 1, 1).normalize();

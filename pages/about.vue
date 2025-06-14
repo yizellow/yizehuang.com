@@ -1,11 +1,9 @@
 <template>
   <main class="relative">
-    <!-- 疊加你的 Three.js 模型組件 -->
-    <div class="fixed top-0 left-0 w-full h-screen pointer-events-none z-10">
+    <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-10">
       <Model :rotationY="modelRotationY" />
     </div>
 
-    <!-- 你原本的內容 -->
     <section
       v-for="(content, idx) in sectionData"
       :key="idx"
@@ -23,7 +21,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import Model from "~/components/three.js/Model.vue";
-
 // ——— 四個 Section 的內容 ———
 const sectionData = [
   {
@@ -104,6 +101,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .section {
   min-height: 100vh;
   opacity: 0; /* 初始隱藏 */
