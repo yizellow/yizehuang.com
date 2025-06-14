@@ -25,9 +25,9 @@ onMounted(() => {
     1000
   );
   camera.position.set(
-    3.820715250497878,
+    3.320715250497878,
     1.6506210944982715,
-    -0.9911089870690157
+    0.6911089870690157
   );
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -54,7 +54,7 @@ onMounted(() => {
     model = gltf.scene;
     scene.add(model);
 
-    model.position.set(0, 0, 0);
+    model.position.set(0, -0.5, 0.21);
     model.scale.set(0.5, 0.5, 0.5);
   });
 

@@ -1,13 +1,9 @@
 <template>
   <main class="relative">
-    <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-10">
-      <Model :rotationY="modelRotationY" />
-    </div>
-
     <section
       v-for="(content, idx) in sectionData"
       :key="idx"
-      class="section flex items-center justify-center px-6 py-20"
+      class="flex section items-center justify-center z-10 relative"
       ref="sections"
     >
       <div class="max-w-3xl text-center">
@@ -15,6 +11,9 @@
         <p class="text-lg whitespace-pre-line">{{ content.body }}</p>
       </div>
     </section>
+    <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-0">
+      <Model :rotationY="modelRotationY" />
+    </div>
   </main>
 </template>
 
@@ -111,36 +110,5 @@ body {
 
 .section {
   min-height: 100vh;
-  opacity: 0; /* 初始隱藏 */
-}
-
-/* 進場動畫 keyframes */
-@keyframes slideInRight {
-  from {
-    transform: translateX(100px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-100px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* 套用進場動畫 */
-.slide-in-right {
-  animation: slideInRight 0.8s forwards ease-out;
-}
-.slide-in-left {
-  animation: slideInLeft 0.8s forwards ease-out;
 }
 </style>
