@@ -1,18 +1,31 @@
 <template>
   <main class="relative">
-    <section
-      v-for="(content, idx) in sectionData"
-      :key="idx"
-      class="flex section items-center justify-center z-10 relative"
-      ref="sections"
+    <div
+      class="fixed top-0 left-0 w-screen h-screen lg:w-1/3 z-0 pointer-events-none"
     >
-      <div class="max-w-3xl text-center">
-        <h2 class="text-3xl font-bold mb-4">{{ content.title }}</h2>
-        <p class="text-lg whitespace-pre-line">{{ content.body }}</p>
-      </div>
-    </section>
-    <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-0">
       <Model :rotationY="modelRotationY" />
+    </div>
+
+    <div class="relative z-10 w-full lg:w-2/3 lg:ml-[33.3333%]">
+      <section
+        v-for="(content, idx) in sectionData"
+        :key="idx"
+        class="flex section items-center justify-center"
+        ref="sections"
+      >
+        <div class="max-w-3xl p-4 w-4/5 lg:w-3/4">
+          <h2
+            class="text-xl lg:text-3xl text-primary font-bold mb-4 text-center lg:text-start"
+          >
+            {{ content.title }}
+          </h2>
+          <p
+            class="text:sm lg:text-lg whitespace-pre-line text-center lg:text-start"
+          >
+            {{ content.body }}
+          </p>
+        </div>
+      </section>
     </div>
   </main>
 </template>
@@ -28,10 +41,7 @@ const sectionData = [
   },
   {
     title: "INTRODUCTION",
-    body:
-      "Hi, my name is Yize Huang. I am from Hualien, Taiwan.\n\n" +
-      "I enjoy poetry and traveling the world. I believe engaging in different cultures gives a different perspective of the world and its people.\n\n" +
-      "Fun fact about myself is that I have a deep fear of boredom, thus the reason why I like to stay engaged in fun stuff.",
+    body: "Hi, my name is Yize Huang. I am from Hualien, Taiwan. I enjoy poetry and traveling the world. I believe engaging in different cultures gives a different perspective of the world and its people. Fun fact about myself is that I have a deep fear of boredom, thus the reason why I like to stay engaged in fun stuff.",
   },
   {
     title: "EXHIBITION",
