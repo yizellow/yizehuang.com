@@ -7,6 +7,9 @@ definePageMeta({
 import { ref, onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import Test from "~/components/pages/Test.vue";
+import Carousel3D from "~/components/global/Carousel3D.vue";
+
 gsap.registerPlugin(ScrollTrigger);
 
 const container = ref(null);
@@ -14,10 +17,9 @@ const card = ref(null);
 const video = ref(null);
 
 onMounted(() => {
-  // 初始大小定位
+  // 初始 scale 5%
   gsap.set(card.value, {
-    width: "5vw",
-    height: "10vw",
+    scale: 0.05,
     xPercent: -50,
     yPercent: -50,
     left: "50vw",
@@ -26,30 +28,28 @@ onMounted(() => {
     transformOrigin: "center center",
   });
 
-  // 用 container 當 trigger
+  // scroll 時放大到 100%
   gsap.to(card.value, {
-    width: "100vw",
-    height: "100vh",
+    scale: 0.95,
     ease: "power4.in",
     scrollTrigger: {
       trigger: container.value,
-      start: "top bottom", // 容器頂部到達畫面底部往上 50% 時啟動
-      end: "bottom bottom", // 容器底部到達畫面底部時結束
+      start: "top bottom",
+      end: "bottom bottom",
       scrub: true,
-      marker: true,
+      markers: true,
     },
   });
 
-  // 影片 scrub 同步（不動）
+  // 影片 scrub 同步
   const vid = video.value;
   const setupVideoScrub = () => {
     vid.play().then(() => vid.pause());
     let lastTime = 0;
     ScrollTrigger.create({
       trigger: container.value,
-      start: "top top ",
+      start: "top top",
       end: "center center-=30%",
-      // markers: true,
       onUpdate: (self) => {
         const t = (vid.duration || 1) * self.progress;
         if (Math.abs(t - lastTime) > 0.05) {
@@ -59,15 +59,17 @@ onMounted(() => {
       },
     });
   };
-  vid.readyState >= 1
-    ? setupVideoScrub()
-    : vid.addEventListener("loadedmetadata", setupVideoScrub);
+  if (vid.readyState >= 1) {
+    setupVideoScrub();
+  } else {
+    vid.addEventListener("loadedmetadata", setupVideoScrub);
+  }
 });
 </script>
 
 <template>
-  <div ref="container" class="relative w-screen h-[300vh]">
-    <section class="sticky top-0 h-[100vh] bg-white">
+  <div ref="container" class="relative w-screen h-[280vh]">
+    <section class="sticky top-0 h-screen bg-white">
       <video
         ref="video"
         class="w-screen h-screen z-5"
@@ -76,7 +78,12 @@ onMounted(() => {
         playsinline
         preload="auto"
       ></video>
-      <div ref="card" class="absolute bg-primary rounded-xl z-10"></div>
+      <div
+        ref="card"
+        class="absolute w-screen h-screen origin-center border-primary border-2 rounded-xl z-10 overflow-hidden"
+      >
+        <Carousel3D />
+      </div>
     </section>
   </div>
 </template>
