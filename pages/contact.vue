@@ -1,19 +1,20 @@
 <script setup>
-// definePageMeta({
-//   layout: "default",
-//   noNavbarPadding: true,
-// });
+definePageMeta({
+  layout: "default",
+  noNavbarPadding: true,
+});
 
 import { ref, onMounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
+const container = ref(null);
 const card = ref(null);
+const video = ref(null);
 
 onMounted(() => {
-  // 初始位置與 transform 設定，確保一開始置中
+  // 初始大小定位
   gsap.set(card.value, {
     width: "5vw",
     height: "10vw",
@@ -21,34 +22,61 @@ onMounted(() => {
     yPercent: -50,
     left: "50vw",
     top: "50vh",
-    transformOrigin: "center center",
     position: "absolute",
+    transformOrigin: "center center",
   });
 
-  // 滑動時放大為 fullscreen
+  // 用 container 當 trigger
   gsap.to(card.value, {
     width: "100vw",
     height: "100vh",
-    ease: "power2.out",
+    ease: "power4.in",
     scrollTrigger: {
-      trigger: card.value,
-      start: "top center",
-      end: "bottom top",
+      trigger: container.value,
+      start: "top bottom", // 容器頂部到達畫面底部往上 50% 時啟動
+      end: "bottom bottom", // 容器底部到達畫面底部時結束
       scrub: true,
+      marker: true,
     },
   });
+
+  // 影片 scrub 同步（不動）
+  const vid = video.value;
+  const setupVideoScrub = () => {
+    vid.play().then(() => vid.pause());
+    let lastTime = 0;
+    ScrollTrigger.create({
+      trigger: container.value,
+      start: "top top ",
+      end: "center center-=30%",
+      // markers: true,
+      onUpdate: (self) => {
+        const t = (vid.duration || 1) * self.progress;
+        if (Math.abs(t - lastTime) > 0.05) {
+          vid.currentTime = t;
+          lastTime = t;
+        }
+      },
+    });
+  };
+  vid.readyState >= 1
+    ? setupVideoScrub()
+    : vid.addEventListener("loadedmetadata", setupVideoScrub);
 });
 </script>
 
 <template>
-  <div class="relative w-screen h-[200vh]">
-    <section class="sticky h-screen top-0 bg-green-100">
-      <!-- 中間的卡片 -->
-      <video autoplay loop muted playsinline class="w-sceen h-screen z-5">
-        <source src="/videos/yizehuang.mp4" type="video/mp4" />
-      </video>
-
-      <div ref="card" class="bg-red-500 z-10 rounded-xl"></div>
+  <div ref="container" class="relative w-screen h-[300vh]">
+    <section class="sticky top-0 h-[100vh] bg-white">
+      <video
+        ref="video"
+        class="w-screen h-screen z-5"
+        src="/videos/yizetitle_fast2.mp4"
+        muted
+        playsinline
+        preload="auto"
+      ></video>
+      <div ref="card" class="absolute bg-primary rounded-xl z-10"></div>
     </section>
   </div>
 </template>
