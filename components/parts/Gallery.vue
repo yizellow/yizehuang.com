@@ -1,5 +1,6 @@
-<!-- BoxTicker.vue -->
+<!-- BoxTickerScroll.vue -->
 <template>
+  <!-- 3D 盒子固定在視窗中央 -->
   <main
     class="w-screen h-screen fixed top-0 left-0 flex items-center justify-center"
   >
@@ -8,12 +9,12 @@
       class="w-11/12 h-11/12 relative overflow-hidden"
     ></section>
   </main>
+
+  <!-- 製造捲動長度 -->
+  <div class="h-[200vh]"></div>
 </template>
 
 <script setup>
-// ──────────────────────────────────────
-// Imports
-// ──────────────────────────────────────
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -22,18 +23,14 @@ import {
   CSS3DObject,
 } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
-// ──────────────────────────────────────
-// Refs & Globals
-// ──────────────────────────────────────
 const containerRef = ref(null);
 let renderer, cssRenderer, scene, camera, controls, animationId;
 
-const boxSize = { x: 180, y: 100, z: 200 };
+const boxSize = { x: 180, y: 100, z: 200 }; // 寬、高、深
 
-// ──────────────────────────────────────
-// Resize Helper
-// ──────────────────────────────────────
 function onResize() {
   if (!containerRef.value) return;
   const w = containerRef.value.clientWidth;
@@ -44,48 +41,43 @@ function onResize() {
   camera.updateProjectionMatrix();
 }
 
-// ──────────────────────────────────────
-// Lifecycle—mount
-// ──────────────────────────────────────
 onMounted(() => {
+  /* 1. 基本組裝 -------------------------------------------------- */
   const container = containerRef.value;
   const W = container.clientWidth;
   const H = container.clientHeight;
 
-  /* 1️⃣ WebGLRenderer：畫 Box + 邊框（先 append） */
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(W, H);
   renderer.domElement.style.position = "absolute";
   container.appendChild(renderer.domElement);
 
-  /* 2️⃣ CSS3DRenderer：畫 DOM（後 append，確保在最上層） */
   cssRenderer = new CSS3DRenderer();
   cssRenderer.setSize(W, H);
   cssRenderer.domElement.style.position = "absolute";
   container.appendChild(cssRenderer.domElement);
 
-  /* 3️⃣ Scene / Camera / Controls */
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(75, W / H, 0.1, 1000);
-  camera.position.set(0, 0, 40); // 位於盒子內
+  camera.position.set(0, 0, -40);
+
   controls = new OrbitControls(camera, cssRenderer.domElement);
   controls.enableDamping = true;
 
-  /* 4️⃣ 半透明立方體（用 BackSide 才看得到內壁） */
+  /* 2. 透明立方體 + 邊框 ---------------------------------------- */
   const cube = new THREE.Mesh(
     new THREE.BoxGeometry(boxSize.x, boxSize.y, boxSize.z),
     new Array(6).fill(
       new THREE.MeshBasicMaterial({
         color: 0xffffff,
-        opacity: 0.1,
         transparent: true,
-        side: THREE.BackSide,
+        opacity: 0.1,
+        side: THREE.BackSide, // 看得到內壁
       })
     )
   );
   scene.add(cube);
 
-  /*   邊框線 */
   const edges = new THREE.LineSegments(
     new THREE.EdgesGeometry(cube.geometry),
     new THREE.LineBasicMaterial({
@@ -97,7 +89,7 @@ onMounted(() => {
   edges.scale.set(1.001, 1.001, 1.001);
   scene.add(edges);
 
-  /* 5️⃣ 範本 div */
+  /* 3. 文字範本 -------------------------------------------------- */
   const templateDiv = document.createElement("div");
   templateDiv.className = "slide";
   templateDiv.style.width = `${boxSize.x}px`;
@@ -113,34 +105,56 @@ onMounted(() => {
     </p>
   `;
 
-  /* 6️⃣ 貼在「背面內側」（-Z） */
-  const insideBack = new CSS3DObject(templateDiv.cloneNode(true));
-  insideBack.position.set(0, 0, -boxSize.z / 2);
-  scene.add(insideBack);
+  /* 4. 四個面 ---------------------------------------------------- */
+  const panels = [];
 
-  /* 🟢 GSAP—方案一：整塊文字上下飄 */
-  gsap.to(insideBack.position, {
-    y: boxSize.y / 2 - 10, // 上界（留 10px 安全距）
-    duration: 5,
-    ease: "power1.inOut",
-    yoyo: true,
-    repeat: -1,
+  // 後面 −Z
+  const back = new CSS3DObject(templateDiv.cloneNode(true));
+  back.position.set(0, -boxSize.y / 2 + 10, -boxSize.z / 2);
+  scene.add(back);
+  panels.push(back);
+
+  // 前面 +Z（翻 180°）
+  const front = new CSS3DObject(templateDiv.cloneNode(true));
+  front.position.set(0, -boxSize.y / 2 + 10, boxSize.z / 2);
+  front.rotation.y = Math.PI;
+  scene.add(front);
+  panels.push(front);
+
+  // 上面 +Y（先 -90° 讓面朝下，再 +180° 讓文字正向）★
+  const top = new CSS3DObject(templateDiv.cloneNode(true));
+  top.position.set(0, boxSize.y / 2 - 10, 0);
+  top.rotation.set(-Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
+  scene.add(top);
+  panels.push(top);
+
+  // 下面 −Y（先 +90° 讓面朝上，再 +180° 讓文字正向）★
+  const bottom = new CSS3DObject(templateDiv.cloneNode(true));
+  bottom.position.set(0, -boxSize.y / 2 + 10, 0);
+  bottom.rotation.set(Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
+  scene.add(bottom);
+  panels.push(bottom);
+
+  /* 5. ScrollTrigger：四面一起 scrub ----------------------------- */
+  panels.forEach((obj) => {
+    const pEl = obj.element.querySelector("p");
+    gsap.fromTo(
+      pEl,
+      { yPercent: 0 },
+      {
+        yPercent: -100,
+        ease: "none",
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      }
+    );
   });
 
-  /* 🟢 GSAP—方案二：段落內容當跑馬燈（可選） */
-  const pEl = insideBack.element.querySelector("p");
-  gsap.fromTo(
-    pEl,
-    { yPercent: 0 },
-    {
-      yPercent: -100,
-      duration: 10,
-      ease: "none",
-      repeat: -1,
-    }
-  );
-
-  /* 7️⃣ render loop */
+  /* 6. render loop ---------------------------------------------- */
   const animate = () => {
     animationId = requestAnimationFrame(animate);
     controls.update();
@@ -149,13 +163,9 @@ onMounted(() => {
   };
   animate();
 
-  /* resize 監聽 */
   window.addEventListener("resize", onResize);
 });
 
-// ──────────────────────────────────────
-// Lifecycle—unmount
-// ──────────────────────────────────────
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationId);
   window.removeEventListener("resize", onResize);
