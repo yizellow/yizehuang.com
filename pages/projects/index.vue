@@ -8,6 +8,6 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="w-screen h-[400vh] bg-amber-700">sss</div>
+  <div class="w-screen h-[400vh] bg-black">sss</div>
   <Gallery />
 </template>
