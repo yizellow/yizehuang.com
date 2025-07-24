@@ -1,7 +1,7 @@
 <template>
   <div
     ref="carouselContainer"
-    :class="cn('relative w-full h-full z-20 bg-primary', '')"
+    :class="cn('relative w-full h-full z-20 bg-white', '')"
     @mousedown="onDragStart"
     @touchstart="onDragStart"
   ></div>

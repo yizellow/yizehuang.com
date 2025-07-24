@@ -1,5 +1,5 @@
 <script setup>
-import Carousel3D from "~/components/global/Carousel3D.vue";
+import Gallery from "~/components/parts/Gallery.vue";
 
 definePageMeta({
   layout: "default",
@@ -8,5 +8,6 @@ definePageMeta({
 </script>
 
 <template>
-  <Carousel3D />
+  <div class="w-screen h-[400vh] bg-amber-700">sss</div>
+  <Gallery />
 </template>

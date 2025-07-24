@@ -68,16 +68,19 @@ onMounted(() => {
 </script>
 
 <template>
+
+
   <div ref="container" class="relative w-screen h-[280vh]">
-    <section class="sticky top-0 h-screen bg-white">
+    <section class="sticky top-0 h-screen">
       <video
         ref="video"
-        class="w-screen h-screen z-5"
+        class="w-screen h-screen z-5 mix-blend-darken"
         src="/videos/yizetitle_fast2.mp4"
         muted
         playsinline
         preload="auto"
       ></video>
+
       <div
         ref="card"
         class="absolute w-screen h-screen origin-center border-primary border-2 rounded-xl z-10 overflow-hidden"
@@ -86,4 +89,9 @@ onMounted(() => {
       </div>
     </section>
   </div>
+  <section class="sticky top-0 h-screen bg-white"></section>
+
+
+
+
 </template>
