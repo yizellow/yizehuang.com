@@ -29,7 +29,7 @@ gsap.registerPlugin(ScrollTrigger);
 const containerRef = ref(null);
 let renderer, cssRenderer, scene, camera, controls, animationId;
 
-const boxSize = { x: 180, y: 100, z: 200 }; // 寬、高、深
+const boxSize = { x: 200, y: 100, z: 100 }; // 寬、高、深
 
 function onResize() {
   if (!containerRef.value) return;
@@ -69,10 +69,9 @@ onMounted(() => {
     new THREE.BoxGeometry(boxSize.x, boxSize.y, boxSize.z),
     new Array(6).fill(
       new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.1,
-        side: THREE.BackSide, // 看得到內壁
+        color: 0x0fffff,
+        // transparent: true,
+        side: THREE.DoubleSide, // 看得到內壁
       })
     )
   );
@@ -94,50 +93,87 @@ onMounted(() => {
   templateDiv.className = "slide";
   templateDiv.style.width = `${boxSize.x}px`;
   templateDiv.style.height = `${boxSize.y}px`;
+
   templateDiv.innerHTML = `
-    <h2>測試</h2>
-    <p>
-      As the U.S. population ages, many families are facing the same challenges...
-      As the U.S. population ages, many families are facing the same challenges...
-      As the U.S. population ages, many families are facing the same challenges...
-      As the U.S. population ages, many families are facing the same challenges...
-      As the U.S. population ages, many families are facing the same challenges...
-    </p>
+
+<main class="container">
+  <div class="buffer"></div>
+
+  <div class="pic">
+    123
+  <div/>
+  <div class="pic">
+    456
+  <div/>
+  <div class="pic">
+    789
+  <div/>
+  <div class="pic">
+    111
+  <div/>
+    <div class="pic">
+    123
+  <div/>
+  <div class="pic">
+    456
+  <div/>
+  <div class="pic">
+    789
+  <div/>
+  <div class="pic">
+    111
+  <div/>
+    <div class="pic">
+    123
+  <div/>
+  <div class="pic">
+    456
+  <div/>
+  <div class="pic">
+    789
+  <div/>
+  <div class="pic">
+    111
+  <div/>
+</main>
   `;
 
   /* 4. 四個面 ---------------------------------------------------- */
   const panels = [];
 
   // 後面 −Z
-  const back = new CSS3DObject(templateDiv.cloneNode(true));
-  back.position.set(0, -boxSize.y / 2 + 10, -boxSize.z / 2);
-  scene.add(back);
-  panels.push(back);
+  // const back = new CSS3DObject(templateDiv.cloneNode(true));
+  // back.position.set(0, -boxSize.y / 2 + 10, -boxSize.z / 2);
+  // scene.add(back);
+  // panels.push(back);
 
   // 前面 +Z（翻 180°）
   const front = new CSS3DObject(templateDiv.cloneNode(true));
-  front.position.set(0, -boxSize.y / 2 + 10, boxSize.z / 2);
+  front.position.set(0, boxSize.z, boxSize.z / 2);
   front.rotation.y = Math.PI;
   scene.add(front);
   panels.push(front);
 
   // 上面 +Y（先 -90° 讓面朝下，再 +180° 讓文字正向）★
   const top = new CSS3DObject(templateDiv.cloneNode(true));
-  top.position.set(0, boxSize.y / 2 - 10, 0);
+  top.position.set(0, boxSize.y / 2, 0);
   top.rotation.set(-Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
+
   scene.add(top);
   panels.push(top);
 
   // 下面 −Y（先 +90° 讓面朝上，再 +180° 讓文字正向）★
   const bottom = new CSS3DObject(templateDiv.cloneNode(true));
-  bottom.position.set(0, -boxSize.y / 2 + 10, 0);
+  bottom.position.set(0, -boxSize.y / 2, boxSize.z + 4);
   bottom.rotation.set(Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
+  const bottomEl = templateDiv.cloneNode(true);
+  bottomEl.style.height = `${boxSize.z}px`;
   scene.add(bottom);
   panels.push(bottom);
 
   /* 5. ScrollTrigger：四面一起 scrub ----------------------------- */
   panels.forEach((obj) => {
-    const pEl = obj.element.querySelector("p");
+    const pEl = obj.element.querySelector("main");
     gsap.fromTo(
       pEl,
       { yPercent: 0 },
@@ -174,17 +210,23 @@ onBeforeUnmount(() => {
   cssRenderer.dispose();
 });
 </script>
+<style>
+.container {
+  background-color: white;
+  width: 100%;
+  display: flex; /* 啟動 Flex */
+  flex-direction: column; /* 一列列往下排 */
+  align-items: center; /* 主軸垂直時，這是水平置中 */
+  justify-content: start;
+}
+.buffer {
+  width: 100%;
+  height: 100px;
+  background-color: blue;
+}
+.pic {
+  width: 80%;
 
-<style scoped>
-.slide {
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #000;
-  box-sizing: border-box;
-  padding: 8px;
-  text-align: center;
+  background-color: red;
 }
 </style>
