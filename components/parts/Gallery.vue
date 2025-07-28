@@ -1,6 +1,7 @@
 <!-- BoxTickerScroll.vue -->
 <template>
   <!-- 3D 盒子固定在視窗中央 -->
+
   <main
     class="w-screen h-screen fixed top-0 left-0 flex items-center justify-center"
   >
@@ -24,6 +25,9 @@ import {
 } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import picUrl from "@/assets/images/pic.jpg";
+
 gsap.registerPlugin(ScrollTrigger);
 
 const containerRef = ref(null);
@@ -95,48 +99,16 @@ onMounted(() => {
   templateDiv.style.height = `${boxSize.y}px`;
 
   templateDiv.innerHTML = `
+  <main class="container">
+    <div class="buffer"></div>
 
-<main class="container">
-  <div class="buffer"></div>
-
-  <div class="pic">
-    123
-  <div/>
-  <div class="pic">
-    456
-  <div/>
-  <div class="pic">
-    789
-  <div/>
-  <div class="pic">
-    111
-  <div/>
-    <div class="pic">
-    123
-  <div/>
-  <div class="pic">
-    456
-  <div/>
-  <div class="pic">
-    789
-  <div/>
-  <div class="pic">
-    111
-  <div/>
-    <div class="pic">
-    123
-  <div/>
-  <div class="pic">
-    456
-  <div/>
-  <div class="pic">
-    789
-  <div/>
-  <div class="pic">
-    111
-  <div/>
-</main>
-  `;
+    <div class="pic"><img src="${picUrl}" /></div>
+    <div class="pic"><img src="${picUrl}" /></div>
+    <div class="pic"><img src="${picUrl}" /></div>
+    <div class="pic"><img src="${picUrl}" /></div>
+        <p>sssasd</p>
+  </main>
+`;
 
   /* 4. 四個面 ---------------------------------------------------- */
   const panels = [];
@@ -164,7 +136,9 @@ onMounted(() => {
 
   // 下面 −Y（先 +90° 讓面朝上，再 +180° 讓文字正向）★
   const bottom = new CSS3DObject(templateDiv.cloneNode(true));
-  bottom.position.set(0, -boxSize.y / 2, boxSize.z + 4);
+  bottom.position.set(0, -boxSize.y / 2, 2 * boxSize.z);
+
+  // bottom.position.set(0, -boxSize.y / 2, boxSize.z + 4);
   bottom.rotation.set(Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
   const bottomEl = templateDiv.cloneNode(true);
   bottomEl.style.height = `${boxSize.z}px`;
@@ -222,10 +196,10 @@ onBeforeUnmount(() => {
 .buffer {
   width: 100%;
   height: 100px;
-  background-color: blue;
+  background-color: white;
 }
 .pic {
-  width: 80%;
+  width: 60%;
 
   background-color: red;
 }
