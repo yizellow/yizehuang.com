@@ -1,4 +1,6 @@
 <script setup>
+import Gallery from "~/components/parts/Gallery.vue";
+
 const exhibitions = [
   {
     date: "12.2023",
@@ -25,6 +27,7 @@ const exhibitions = [
 </script>
 
 <template>
+  <Gallery />
   <section class="w-screen h-screen flex justify-center items-center">
     <div class="w-1/2 h-auto p-4 border-2 border-primary">
       <div v-for="(exhibit, index) in exhibitions" :key="index" class="mb-5">

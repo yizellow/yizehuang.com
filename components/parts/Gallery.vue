@@ -1,19 +1,4 @@
 <!-- BoxTickerScroll.vue -->
-<template>
-  <!-- 3D 盒子固定在視窗中央 -->
-
-  <main
-    class="w-screen h-screen fixed top-0 left-0 flex items-center justify-center"
-  >
-    <section
-      ref="containerRef"
-      class="w-11/12 h-11/12 relative overflow-hidden"
-    ></section>
-  </main>
-
-  <!-- 製造捲動長度 -->
-  <div class="h-[200vh]"></div>
-</template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
@@ -25,6 +10,7 @@ import {
 } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Gallery from "~/components/parts/Gallery.vue";
 
 import picUrl from "@/assets/images/pic.jpg";
 
@@ -32,6 +18,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const containerRef = ref(null);
 let renderer, cssRenderer, scene, camera, controls, animationId;
+// 提供滾動距離的 spacer 高度（px）
+const spacerHeight = ref(0);
+// 視窗高度（px）
+const viewportHeight = ref(0);
 
 const boxSize = { x: 200, y: 100, z: 100 }; // 寬、高、深
 
@@ -43,13 +33,32 @@ function onResize() {
   cssRenderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
+  // 同步更新視窗高度
+  if (typeof window !== "undefined") {
+    viewportHeight.value = window.innerHeight;
+  }
 }
 
 onMounted(() => {
+  // 初始化視窗高度
+  if (typeof window !== "undefined") {
+    viewportHeight.value = window.innerHeight;
+  }
   /* 1. 基本組裝 -------------------------------------------------- */
   const container = containerRef.value;
   const W = container.clientWidth;
   const H = container.clientHeight;
+  const slides = [
+    { img: picUrl, caption: "photo 1" },
+    { img: picUrl, caption: "photo 2" },
+    { img: picUrl, caption: "photo 3" },
+    { img: picUrl, caption: "photo 4" },
+    { img: picUrl, caption: "photo 5" },
+    { img: picUrl, caption: "photo 6" },
+    { img: picUrl, caption: "photo 7" },
+
+    // 想要幾筆就加幾筆
+  ];
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(W, H);
@@ -66,31 +75,44 @@ onMounted(() => {
   camera.position.set(0, 0, -40);
 
   controls = new OrbitControls(camera, cssRenderer.domElement);
-  controls.enableDamping = true;
+  controls.enableDamping = false;
+  controls.enableRotate = false; // 禁用旋轉
+  controls.enableZoom = false; // 禁用縮放
+  controls.enablePan = false; // 禁用平移
 
   /* 2. 透明立方體 + 邊框 ---------------------------------------- */
   const cube = new THREE.Mesh(
     new THREE.BoxGeometry(boxSize.x, boxSize.y, boxSize.z),
     new Array(6).fill(
       new THREE.MeshBasicMaterial({
-        color: 0x0fffff,
-        // transparent: true,
+        color: 0xf7f8fa,
+        transparent: false,
         side: THREE.DoubleSide, // 看得到內壁
       })
     )
   );
   scene.add(cube);
-
   const edges = new THREE.LineSegments(
     new THREE.EdgesGeometry(cube.geometry),
     new THREE.LineBasicMaterial({
       color: 0x00ff00,
-      depthTest: false,
-      depthWrite: false,
+      depthTest: true,
+      depthWrite: true,
     })
   );
   edges.scale.set(1.001, 1.001, 1.001);
   scene.add(edges);
+
+  const itemsHtml = slides
+    .map(
+      ({ img, caption }) => `
+      <div class="container  p-2 m-2  bg-primary/80">
+        <div class="pic"><img src="${img}" /></div>
+        <p class="opacity-90 ">${caption}</p>
+      </div>
+    `
+    )
+    .join("");
 
   /* 3. 文字範本 -------------------------------------------------- */
   const templateDiv = document.createElement("div");
@@ -99,36 +121,27 @@ onMounted(() => {
   templateDiv.style.height = `${boxSize.y}px`;
 
   templateDiv.innerHTML = `
-  <main class="container">
-    <div class="buffer"></div>
-
-    <div class="pic"><img src="${picUrl}" /></div>
-    <div class="pic"><img src="${picUrl}" /></div>
-    <div class="pic"><img src="${picUrl}" /></div>
-    <div class="pic"><img src="${picUrl}" /></div>
-        <p>sssasd</p>
-  </main>
-`;
+    <main class="container bg-white/30   ">
+      <div class="w-full h-[100px] "></div>
+      <section class="w-3/5 silkscreen text-[6px] mt-2 ">
+        ${itemsHtml}
+      </section>
+    </main>
+  `;
 
   /* 4. 四個面 ---------------------------------------------------- */
   const panels = [];
 
-  // 後面 −Z
-  // const back = new CSS3DObject(templateDiv.cloneNode(true));
-  // back.position.set(0, -boxSize.y / 2 + 10, -boxSize.z / 2);
-  // scene.add(back);
-  // panels.push(back);
-
   // 前面 +Z（翻 180°）
   const front = new CSS3DObject(templateDiv.cloneNode(true));
-  front.position.set(0, boxSize.z, boxSize.z / 2);
+  front.position.set(0, boxSize.z, 1 + boxSize.z / 2);
   front.rotation.y = Math.PI;
   scene.add(front);
   panels.push(front);
 
   // 上面 +Y（先 -90° 讓面朝下，再 +180° 讓文字正向）★
   const top = new CSS3DObject(templateDiv.cloneNode(true));
-  top.position.set(0, boxSize.y / 2, 0);
+  top.position.set(0, -1 + boxSize.y / 2, 0);
   top.rotation.set(-Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
 
   scene.add(top);
@@ -136,7 +149,7 @@ onMounted(() => {
 
   // 下面 −Y（先 +90° 讓面朝上，再 +180° 讓文字正向）★
   const bottom = new CSS3DObject(templateDiv.cloneNode(true));
-  bottom.position.set(0, -boxSize.y / 2, 2 * boxSize.z);
+  bottom.position.set(0, -boxSize.y / 2 + 1, 2 * boxSize.z);
 
   // bottom.position.set(0, -boxSize.y / 2, boxSize.z + 4);
   bottom.rotation.set(Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
@@ -146,28 +159,119 @@ onMounted(() => {
   panels.push(bottom);
 
   /* 5. ScrollTrigger：四面一起 scrub ----------------------------- */
-  panels.forEach((obj) => {
-    const pEl = obj.element.querySelector("main");
-    gsap.fromTo(
-      pEl,
-      { yPercent: 0 },
+  let frontScrollTween;
+  let otherScrollTweens = [];
+
+  // 等待圖片載入，避免量測高度不準
+  const waitForImages = async (rootEl) => {
+    const imgs = Array.from(rootEl.querySelectorAll("img"));
+    if (imgs.length === 0) return;
+    await Promise.all(
+      imgs.map((img) =>
+        img.complete && img.naturalHeight !== 0
+          ? Promise.resolve()
+          : new Promise((resolve) =>
+              img.addEventListener("load", resolve, { once: true })
+            )
+      )
+    );
+  };
+
+  const setupScrolling = () => {
+    // 先清掉舊的 tween
+    if (frontScrollTween) frontScrollTween.kill();
+    otherScrollTweens.forEach((t) => t.kill());
+    otherScrollTweens = [];
+
+    // 取得 front 面 main（與其他面一致）
+    const frontMain = front.element.querySelector("main");
+    const faceHeight = boxSize.y;
+
+    // 動態量測內容高度與需要滑動的距離
+    const contentHeight =
+      frontMain.scrollHeight || frontMain.getBoundingClientRect().height;
+    const scrollDistance = Math.max(0, contentHeight - faceHeight);
+
+    // 以 spacer 製造可滾動距離，避免使用 pin
+    spacerHeight.value = scrollDistance;
+
+    // front 面：用 px 精準滑動到內容剛好全部滑出
+    frontScrollTween = gsap.fromTo(
+      frontMain,
+      { y: 0 },
       {
-        yPercent: -100,
+        y: () =>
+          -Math.max(
+            0,
+            (frontMain.scrollHeight ||
+              frontMain.getBoundingClientRect().height) - faceHeight
+          ),
         ease: "none",
+        immediateRender: false,
         scrollTrigger: {
-          trigger: document.body,
+          trigger: containerRef.value,
           start: "top top",
-          end: "bottom top",
+          end: () =>
+            `+=${Math.max(
+              0,
+              (frontMain.scrollHeight ||
+                frontMain.getBoundingClientRect().height) - faceHeight
+            )}`,
           scrub: true,
+          markers: true,
+          invalidateOnRefresh: true,
         },
       }
     );
+
+    // 其他面：與 front 同步距離，改用 px 位移確保可滑完整內容
+    panels
+      .filter((obj) => obj !== front)
+      .forEach((obj) => {
+        const pEl = obj.element.querySelector("main");
+        const tween = gsap.fromTo(
+          pEl,
+          { y: 0 },
+          {
+            y: () =>
+              -Math.max(
+                0,
+                (frontMain.scrollHeight ||
+                  frontMain.getBoundingClientRect().height) - faceHeight
+              ),
+            ease: "none",
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: containerRef.value,
+              start: "top top",
+              end: () =>
+                `+=${Math.max(
+                  0,
+                  (frontMain.scrollHeight ||
+                    frontMain.getBoundingClientRect().height) - faceHeight
+                )}`,
+              scrub: true,
+              markers: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+        otherScrollTweens.push(tween);
+      });
+  };
+
+  // 等待一幀與圖片載入後再量測，避免初始高度計算錯誤
+  requestAnimationFrame(async () => {
+    const frontMain = front.element.querySelector("main");
+    await waitForImages(frontMain);
+    setupScrolling();
+    ScrollTrigger.refresh();
   });
 
   /* 6. render loop ---------------------------------------------- */
   const animate = () => {
     animationId = requestAnimationFrame(animate);
-    controls.update();
+    // controls.update();
     renderer.render(scene, camera);
     cssRenderer.render(scene, camera);
   };
@@ -179,28 +283,45 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationId);
   window.removeEventListener("resize", onResize);
-  controls.dispose();
+  // controls.dispose();
   renderer.dispose();
-  cssRenderer.dispose();
+
+  // 把 CSS3D 的 DOM 元素移除
+  if (cssRenderer?.domElement?.parentNode) {
+    cssRenderer.domElement.parentNode.removeChild(cssRenderer.domElement);
+  }
+
+  // 不要再呼叫 cssRenderer.dispose()
 });
 </script>
+<template>
+  <!-- sticky 區塊 + spacer 提供可滾動距離 -->
+  <section
+    class="w-full relative"
+    :style="{ height: `${spacerHeight + viewportHeight}px` }"
+  >
+    <div class="sticky top-0 h-screen" ref="containerRef"></div>
+  </section>
+</template>
+
 <style>
 .container {
-  background-color: white;
   width: 100%;
   display: flex; /* 啟動 Flex */
   flex-direction: column; /* 一列列往下排 */
   align-items: center; /* 主軸垂直時，這是水平置中 */
   justify-content: start;
+  border: 0.5px solid var(--color-primary);
 }
 .buffer {
   width: 100%;
   height: 100px;
-  background-color: white;
 }
 .pic {
-  width: 60%;
-
-  background-color: red;
+  width: 100%;
+  border: 0.5px solid var(--color-primary);
+}
+.pic:hover img {
+  filter: invert(100%);
 }
 </style>

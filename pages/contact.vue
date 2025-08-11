@@ -1,3 +1,5 @@
+<!-- 有時候沒顯現是因為他依照外面容器去拉開。 -->
+
 <script setup>
 definePageMeta({
   layout: "default",
@@ -9,6 +11,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Test from "~/components/pages/Test.vue";
 import Carousel3D from "~/components/global/Carousel3D.vue";
+import Gallery from "~/components/parts/Gallery.vue";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -68,8 +71,6 @@ onMounted(() => {
 </script>
 
 <template>
-
-
   <div ref="container" class="relative w-screen h-[280vh]">
     <section class="sticky top-0 h-screen">
       <video
@@ -89,9 +90,12 @@ onMounted(() => {
       </div>
     </section>
   </div>
-  <section class="sticky top-0 h-screen bg-white"></section>
-
-
-
-
+  <section class="relative h-[100vh] bg-red-500">
+    <div class="sticky top-0 h-screen">
+      <client-only>
+        <Gallery />
+      </client-only>
+    </div>
+  </section>
+  <!-- <section class="h-[100vh] w-full bg-amber-500"></section> -->
 </template>

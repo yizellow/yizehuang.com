@@ -8,5 +8,7 @@ definePageMeta({
 </script>
 
 <template>
-  <Gallery />
+  <client-only>
+    <Gallery />
+  </client-only>
 </template>
