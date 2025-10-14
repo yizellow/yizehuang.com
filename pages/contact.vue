@@ -71,6 +71,7 @@ onMounted(() => {
 </script>
 
 <template>
+ 
   <div ref="container" class="relative w-screen h-[280vh]">
     <section class="sticky top-0 h-screen">
       <video
@@ -97,5 +98,6 @@ onMounted(() => {
       </client-only>
     </div>
   </section>
-  <!-- <section class="h-[100vh] w-full bg-amber-500"></section> -->
+  <section class="h-[100vh] w-full bg-amber-500"></section>
+  
 </template>

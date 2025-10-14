@@ -96,8 +96,8 @@ onMounted(() => {
     new THREE.EdgesGeometry(cube.geometry),
     new THREE.LineBasicMaterial({
       color: 0x00ff00,
-      depthTest: true,
-      depthWrite: true,
+      depthTest: false,
+      depthWrite: false,
     })
   );
   edges.scale.set(1.001, 1.001, 1.001);
@@ -134,14 +134,14 @@ onMounted(() => {
 
   // 前面 +Z（翻 180°）
   const front = new CSS3DObject(templateDiv.cloneNode(true));
-  front.position.set(0, boxSize.z, 1 + boxSize.z / 2);
+  front.position.set(0, boxSize.z, boxSize.z / 2);
   front.rotation.y = Math.PI;
   scene.add(front);
   panels.push(front);
 
   // 上面 +Y（先 -90° 讓面朝下，再 +180° 讓文字正向）★
   const top = new CSS3DObject(templateDiv.cloneNode(true));
-  top.position.set(0, -1 + boxSize.y / 2, 0);
+  top.position.set(0, boxSize.y / 2, 0);
   top.rotation.set(-Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
 
   scene.add(top);
@@ -149,7 +149,7 @@ onMounted(() => {
 
   // 下面 −Y（先 +90° 讓面朝上，再 +180° 讓文字正向）★
   const bottom = new CSS3DObject(templateDiv.cloneNode(true));
-  bottom.position.set(0, -boxSize.y / 2 + 1, 2 * boxSize.z);
+  bottom.position.set(0, -boxSize.y / 2, 2 * boxSize.z);
 
   // bottom.position.set(0, -boxSize.y / 2, boxSize.z + 4);
   bottom.rotation.set(Math.PI / 2, Math.PI, 0); // ★ 多轉 Y = π
@@ -190,7 +190,7 @@ onMounted(() => {
     // 動態量測內容高度與需要滑動的距離
     const contentHeight =
       frontMain.scrollHeight || frontMain.getBoundingClientRect().height;
-    const scrollDistance = Math.max(0, contentHeight - faceHeight);
+    const scrollDistance = Math.max(0, contentHeight - faceHeight); //TODO:要讓面少一個
 
     // 以 spacer 製造可滾動距離，避免使用 pin
     spacerHeight.value = scrollDistance;
