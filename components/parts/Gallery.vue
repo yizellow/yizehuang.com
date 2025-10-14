@@ -13,7 +13,29 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Gallery from "~/components/parts/Gallery.vue";
 
 import picUrl from "@/assets/images/pic.jpg";
-
+const exhibitions = [
+  {
+    date: "12.2023",
+    title: "Painting Comfort Zone",
+    location: "North and South Gallery",
+  },
+  {
+    date: "05.2023",
+    title: "If the World Had No Maps",
+    location: "Underground Experimental Field",
+  },
+  {
+    date: "08.2021",
+    title: "2021GenieLab TNUA (Third Place)",
+    location: "online exhibition",
+  },
+  {
+    date: "12.2020",
+    title: "Picking up Color Project: Pocket book for Autumn",
+    location: "North and South Gallery",
+  },
+  { date: "12.2019", title: "Myself", location: "8 and one-half Gallery" },
+];
 gsap.registerPlugin(ScrollTrigger);
 
 const containerRef = ref(null);
@@ -22,6 +44,9 @@ let renderer, cssRenderer, scene, camera, controls, animationId;
 const spacerHeight = ref(0);
 // 視窗高度（px）
 const viewportHeight = ref(0);
+// 當捲動到區塊底部時顯示置中元素
+const showBottomBadge = ref(false);
+let bottomBadgeST;
 
 const boxSize = { x: 200, y: 100, z: 100 }; // 寬、高、深
 
@@ -193,6 +218,7 @@ onMounted(() => {
     const scrollDistance = Math.max(0, contentHeight - faceHeight); //TODO:要讓面少一個
 
     // 以 spacer 製造可滾動距離，避免使用 pin
+    // 精準以內容高度決定可滾距離（不再額外加尾端距離）
     spacerHeight.value = scrollDistance;
 
     // front 面：用 px 精準滑動到內容剛好全部滑出
@@ -278,6 +304,15 @@ onMounted(() => {
   animate();
 
   window.addEventListener("resize", onResize);
+
+  // 於本區塊捲到最底時顯示置中元素
+  bottomBadgeST = ScrollTrigger.create({
+    trigger: containerRef.value,
+    start: "bottom bottom",
+    onEnter: () => (showBottomBadge.value = true),
+    onLeaveBack: () => (showBottomBadge.value = false),
+    invalidateOnRefresh: true,
+  });
 });
 
 onBeforeUnmount(() => {
@@ -292,6 +327,7 @@ onBeforeUnmount(() => {
   }
 
   // 不要再呼叫 cssRenderer.dispose()
+  if (bottomBadgeST) bottomBadgeST.kill();
 });
 </script>
 <template>
@@ -300,7 +336,13 @@ onBeforeUnmount(() => {
     class="w-full relative"
     :style="{ height: `${spacerHeight + viewportHeight}px` }"
   >
-    <div class="sticky top-0 h-screen" ref="containerRef"></div>
+    <div class="sticky top-0 h-screen z-10" ref="containerRef"></div>
+    <div
+      class="bg-amber-200 w-[10vw] h-[10vh]  inset-0 z-20 flex items-end justify-center transition-opacity duration-300"
+      :class="showBottomBadge ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+    >
+      <span class="bg-amber-300 px-3 py-1">123</span>
+    </div>
   </section>
 </template>
 
