@@ -57,7 +57,7 @@ onMounted(() => {
 
   // scroll 時放大到 100%
   gsap.to(card.value, {
-    scale: 0.95,
+    scale: 0.7,
     ease: "power4.in",
     scrollTrigger: {
       trigger: container.value,
@@ -100,7 +100,7 @@ onMounted(() => {
     <section class="sticky top-0 h-screen">
       <video
         ref="video"
-        class="w-screen h-screen z-5 mix-blend-darken"
+        class="[w-100vw] h-screen z-5 mix-blend-darken"
         src="/videos/yizetitle_fast2.mp4"
         muted
         playsinline
@@ -109,22 +109,21 @@ onMounted(() => {
 
       <div
         ref="card"
-        class="absolute w-screen h-screen bg-secondary/50 origin-center border-primary border-2 rounded-xl z-10 overflow-hidden"
+        class="absolute w-screen h-screen bg-secondary/50 origin-center border-primary rounded-xl z-10 overflow-hidden"
       >
         <Model />
       </div>
     </section>
   </div>
-  <div class="w-screen h-[10vh] bg-primary z-20">ssss</div>
 
-  <section class="relative h-[100vh] bg-red-500">
-    <div class="w-screen h-screen">
+  <section class="relative w-screen h-[100vh] bg-red-500">
+    <div class="w-full h-full">
       <client-only>
         <Gallery />
       </client-only>
-      <div class="w-screen h-[10vh] bg-secondary z-20">ssss</div>
+      <div class="w-full h-[10vh] bg-secondary z-20">ssss</div>
 
-      <section class="w-screen h-screen flex justify-center items-center">
+      <section class="w-full h-full flex justify-center items-center">
         <div class="w-1/2 h-auto p-4 border-2 border-primary">
           <div
             v-for="(exhibit, index) in exhibitions"
@@ -153,7 +152,7 @@ onMounted(() => {
         </div>
       </section>
 
-      <footer class="w-screen h-[20vh] flex flex-col bg-primary"></footer>
+      <footer class="w-full h-[20vh] flex flex-col bg-primary"></footer>
     </div>
   </section>
 </template>
