@@ -1,4 +1,7 @@
 <template>
+  <client-only>
+    <Gallery />
+  </client-only>
   <main class="relative">
     <div
       class="fixed top-0 left-0 w-screen h-screen lg:w-1/3 z-0 pointer-events-none"
@@ -33,6 +36,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import Model from "~/components/three.js/Model.vue";
+import Gallery from "~/components/parts/Gallery.vue";
+
 // ——— 四個 Section 的內容 ———
 const sectionData = [
   {

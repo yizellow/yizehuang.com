@@ -124,13 +124,13 @@ function onBtnLeave(idx) {
             :key="item.label"
             :class="[
               'navbar-text',
-              'geo',
+              'silkscreen',
               `navbar-text-btn-${idx}`,
               'flex-1',
               'mx-2',
               'py-1',
               'text-center',
-              'text-2xl',
+              'text-lg',
               'rounded-lg',
               'cursor-pointer',
             ]"

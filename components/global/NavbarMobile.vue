@@ -180,7 +180,7 @@ router.afterEach(() => {
         @click="expandNav"
         class="flex flex-row items-center cursor-pointer"
       >
-        <p class="mr-2 geo text-2xl">MENU</p>
+        <p class="mr-2 silkscreen text-xl">MENU</p>
         <Icon
           v-show="menuIconSwitch"
           icon="material-symbols:menu-rounded"
@@ -214,7 +214,7 @@ router.afterEach(() => {
           "
           class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0 cursor-pointer"
         >
-          <p class="text-lg">{{ item.label }}</p>
+          <p class="text-sm newsreader">{{ item.label }}</p>
         </div>
       </NuxtLink>
     </nav>

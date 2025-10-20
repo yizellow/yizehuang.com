@@ -1,74 +1,67 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import Gallery from "~/components/parts/Gallery.vue";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const horizontalWrapper = ref(null);
-
-onMounted(() => {
-  // —— 1. 橫向滑動 ——
-  const hSections = horizontalWrapper.value.querySelectorAll("section");
-  gsap.to(hSections, {
-    xPercent: -100 * (hSections.length - 1),
-    ease: "none",
-    scrollTrigger: {
-      trigger: horizontalWrapper.value,
-      pin: true,
-      scrub: 1,
-      end: () => `+=${horizontalWrapper.value.offsetWidth}`,
-      invalidateOnRefresh: true,
-    },
-  });
-
-  // —— 2. 卡片 pin + 垂直偏移（堆疊效果） ——
-  const cards = gsap.utils.toArray(".card");
-});
+const exhibitions = [
+  {
+    date: "12.2023",
+    title: "Painting Comfort Zone",
+    location: "North and South Gallery",
+  },
+  {
+    date: "05.2023",
+    title: "If the World Had No Maps",
+    location: "Underground Experimental Field",
+  },
+  {
+    date: "08.2021",
+    title: "2021GenieLab TNUA (Third Place)",
+    location: "online exhibition",
+  },
+  {
+    date: "12.2020",
+    title: "Picking up Color Project: Pocket book for Autumn",
+    location: "North and South Gallery",
+  },
+  { date: "12.2019", title: "Myself", location: "8 and one-half Gallery" },
+];
 </script>
 
 <template>
-  <main class="overflow-x-hidden">
-    <!-- Landing -->
-    <section
-      class="w-screen min-h-screen bg-blue-300 flex items-center justify-center text-4xl"
-    >
-      landing
-    </section>
+  <Gallery />
+  <section class="w-screen h-screen flex justify-center items-center">
+    <div class="w-1/2 h-auto p-4 border-2 border-primary">
+      <div v-for="(exhibit, index) in exhibitions" :key="index" class="mb-5">
+        <p class="flex justify-between items-center m-0 text-secondary text-xs">
+          <!-- 左邊：時間 + 名稱 -->
+          <span class="flex gap-2 items-center">
+            <span class="newsreader text-xs">{{ exhibit.date }}</span>
+            <h1 class="silkscreen text-base">{{ exhibit.title }}</h1>
+          </span>
 
-    <!-- 橫向滑動區 -->
-    <div class="overflow-x-hidden">
-      <div class="flex" ref="horizontalWrapper">
-        <section
-          class="min-w-full min-h-screen bg-amber-600 flex-shrink-0 flex items-center justify-center text-4xl"
-        >
-          works
-        </section>
-        <section
-          class="min-w-full min-h-screen bg-amber-700 flex-shrink-0 flex items-center justify-center text-4xl"
-        >
-          doing now
-        </section>
+          <!-- 右邊：地點 -->
+          <span class="newsreader text-xs text-right">{{
+            exhibit.location
+          }}</span>
+        </p>
       </div>
     </div>
+  </section>
 
-    <!-- 卡片堆疊區： introduction、exhibition、contact -->
-    <div class="relative w-full bg-black">
-      <section
-        class="card w-screen min-h-screen bg-red-400 border-[10px] border-gray-300 text-white flex items-center justify-center text-3xl"
-      >
-        introduction
-      </section>
-      <section
-        class="card w-screen min-h-screen bg-red-500 border-[10px] border-gray-300 text-white flex items-center justify-center text-3xl top-100px"
-      >
-        exhibition
-      </section>
-      <section
-        class="card w-screen min-h-screen bg-red-600 border-[10px] border-gray-300 text-white flex items-center justify-center text-3xl top-100px"
-      >
-        contact
-      </section>
+  <footer class="w-screen h-screen flex flex-col">
+    <div class="w-full md:w-1/3 m-5">
+      <h1 class="silkscreen mb-2 text-2xl text-primary">About</h1>
+      <p class="newsreader text-base">
+        Andrés Briganti is an independent designer specializing in visual
+        identity, with expertise in bespoke logotypes, custom typography, and
+        conceptual frameworks. His design practice is characterized by a
+        refined, intentional approach that distills complex ideas into
+        distinctive visual forms.
+      </p>
     </div>
-  </main>
+  </footer>
 </template>
+<!-- <section class="w-1/3 h-[56px] note bg-primary border-2 border-secondary">
+      <p>whatsApp: (+886) 981488850</p>
+    </section>
+    <section class="w-1/3 h-1/4 bg-primary border-2 border-secondary"></section>
+    <section class="w-1/3 h-1/4 bg-primary border-2 border-secondary"></section> -->

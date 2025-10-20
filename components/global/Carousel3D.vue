@@ -1,7 +1,7 @@
 <template>
   <div
     ref="carouselContainer"
-    :class="cn('fixed inset-0 w-screen h-screen z-20', '')"
+    :class="cn('relative w-full h-full z-20 bg-white', '')"
     @mousedown="onDragStart"
     @touchstart="onDragStart"
   ></div>
@@ -27,7 +27,6 @@ const items = [
   "https://picsum.photos/450/600?random=1",
   "https://picsum.photos/450/600?random=2",
   "https://picsum.photos/450/600?random=3",
-  "https://picsum.photos/450/600?random=4",
 ];
 
 // 卡片大小與拖曳靈敏度
