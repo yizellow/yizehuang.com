@@ -21,26 +21,26 @@ const card = ref(null);
 const video = ref(null);
 const exhibitions = [
   {
-    date: "12.2023",
+    date: "2023",
     title: "Painting Comfort Zone",
     location: "North and South Gallery",
   },
   {
-    date: "05.2023",
+    date: "2023",
     title: "If the World Had No Maps",
     location: "Underground Experimental Field",
   },
   {
-    date: "08.2021",
+    date: "2021",
     title: "2021GenieLab TNUA (Third Place)",
     location: "online exhibition",
   },
   {
-    date: "12.2020",
+    date: "2020",
     title: "Picking up Color Project: Pocket book for Autumn",
     location: "North and South Gallery",
   },
-  { date: "12.2019", title: "Myself", location: "8 and one-half Gallery" },
+  { date: "2019", title: "Myself", location: "8 and one-half Gallery" },
 ];
 
 onMounted(() => {
@@ -76,8 +76,8 @@ onMounted(() => {
     ScrollTrigger.create({
       trigger: container.value,
       start: "top top",
-      end: "bottom bottom",
-      // end: "bottom bottom-=30%",
+      // end: "bottom bottom",
+      end: "bottom bottom-=90%",
       onUpdate: (self) => {
         const t = (vid.duration || 1) * self.progress;
         if (Math.abs(t - lastTime) > 0.05) {
@@ -117,24 +117,34 @@ onMounted(() => {
   </div>
 
   <section class="relative w-screen h-[100vh] bg-red-500">
-    <div class="w-full h-full border-amber-100 border-2">
+    <div class="w-full h-full">
       <client-only>
         <Gallery />
       </client-only>
-      <div
-        class="w-full h-[70px] z-20 flex justify-center items-start bg-amber-100"
-      >
-        <div
-          class="bg-secondary w-[100px] h-4/5 border-2 border-secondary text-white"
-        >
-          ssss
-        </div>
-      </div>
-
       <section
-        class="w-full h-[50vh] flex justify-center items-start border-2 border-amber-300"
+        class="w-full h-auto flex flex-col justify-start items-center p-4"
       >
-        <div class="w-1/2 h-auto p-4 border-2 border-primary">
+        <div class="w-1/2 h-full mb-5">
+          <p class="silkscreen text-left text-3xl">CV</p>
+        </div>
+
+        <div class="w-1/2 h-full p-4 border-2 border-primary text-xs">
+          <div class="mb-2">
+            <p class="mb-2 text-sm silkscreen">
+              2027 MFA, Frank Mohr Institute
+            </p>
+            <p class="text-right mb-5 newsreader">
+              Media, Art, Design & Technology (MADtech)
+            </p>
+            <p class="mb-2 silkscreen text-sm">
+              2024 BA, Taipei National University of the Arts
+            </p>
+            <p class="mb-4 text-right newsreader">
+              Art History and Visual Culture
+            </p>
+          </div>
+          <hr class="h-px mb-5 border-0 bg-primary" />
+
           <div
             v-for="(exhibit, index) in exhibitions"
             :key="index"
@@ -161,16 +171,15 @@ onMounted(() => {
           </div>
         </div>
       </section>
-
       <footer
-        class="w-full h-[7vh] flex boreder text-secondary justify-center items-center border-2 border-dashed"
+        class="w-full h-[10vh] flex boreder text-secondary justify-center items-center mt-10"
       >
         <div
-          class="newsreader flex flex-row items-center justify-center gap-4 w-7/8 h-full"
+          class="p-2 newsreader flex flex-row items-center mb-2 justify-between gap-4 w-1/2 h-full"
         >
           <p>Email: yize0926@gmail.com</p>
-          <p>whatapp: 886+981488850</p>
-          <p>instagram: _yi_ze_</p>
+          <p>whatsApp: +886 (0) 981488850</p>
+          <p>Instagram: yizellow</p>
         </div>
       </footer>
     </div>
