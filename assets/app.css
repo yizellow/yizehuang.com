@@ -34,6 +34,8 @@
   --depth: 1;
   --noise: 0;
 }
-
-
+/* 
+* {
+  outline: 1px solid red;
+} */
 /* 有點治標題橫向滾動條的bug */

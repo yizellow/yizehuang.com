@@ -5,7 +5,6 @@ definePageMeta({
   layout: "default",
   noNavbarPadding: false,
 });
-
 </script>
 
 <template>
@@ -19,7 +18,5 @@ definePageMeta({
         <Model />
       </ClientOnly>
     </div>
-
-    
   </div>
 </template>

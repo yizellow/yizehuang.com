@@ -74,13 +74,32 @@ onMounted(() => {
   const W = container.clientWidth;
   const H = container.clientHeight;
   const slides = [
-    { img: picUrl, caption: "photo 1" },
-    { img: picUrl, caption: "photo 2" },
-    { img: picUrl, caption: "photo 3" },
-    { img: picUrl, caption: "photo 4" },
-    { img: picUrl, caption: "photo 5" },
-    { img: picUrl, caption: "photo 6" },
-    { img: picUrl, caption: "photo 7" },
+    {
+      img: "https://cdna.artstation.com/p/assets/images/images/082/633/124/large/yize-huang-2024-12-06-9-01-23.jpg?1733490357",
+      caption: "CHIPS",
+    },
+    {
+      img: "https://cdnb.artstation.com/p/assets/images/images/052/116/789/large/yize-huang-plastic-wrap-protection-laocoon-and-his-sons.jpg?1658985491",
+      caption: "3D modeling",
+    },
+    {
+      img: "https://cdnb.artstation.com/p/assets/images/images/082/626/611/large/yize-huang-j4.jpg?1733473161",
+      caption: "Yizellow",
+    },
+
+    {
+      img: "https://cdna.artstation.com/p/assets/images/images/082/332/470/large/yize-huang-2024-11-27-5-48-00.jpg?1732701058",
+      caption: "Travel and my film camera",
+    },
+    // {
+    //   img: "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
+    //   caption: "photo 5",
+    // },
+    {
+      img: "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
+      caption: "Light Installion",
+    },
+    // { img: picUrl, caption: "photo 7" },
 
     // 想要幾筆就加幾筆
   ];
@@ -131,7 +150,7 @@ onMounted(() => {
   const itemsHtml = slides
     .map(
       ({ img, caption }) => `
-      <div class="container  p-2 m-2  bg-primary/80">
+      <div class="container  p-2 m-2  bg-white/80">
         <div class="pic"><img src="${img}" /></div>
         <p class="opacity-90 ">${caption}</p>
       </div>
@@ -146,11 +165,16 @@ onMounted(() => {
   templateDiv.style.height = `${boxSize.y}px`;
 
   templateDiv.innerHTML = `
-    <main class="container bg-white/30   ">
+    <main class="container bg-white/30 justify-center">
       <div class="w-full h-[100px] "></div>
-      <section class="w-3/5 silkscreen text-[6px] mt-2 ">
+      <section class="w-3/5 silkscreen text-[6px] mt-2  ">
         ${itemsHtml}
       </section>
+     <div class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2  rounded-4xl
+ text-primary flex justify-center items-center mb-2 p-2 seemore">
+      <p class="text-xs ">see all projects......</p>
+      </div>
+
     </main>
   `;
 
@@ -337,12 +361,6 @@ onBeforeUnmount(() => {
     :style="{ height: `${spacerHeight + viewportHeight}px` }"
   >
     <div class="sticky top-0 h-screen z-10" ref="containerRef"></div>
-    <div
-      class="bg-amber-200 w-[10vw] h-[10vh]  inset-0 z-20 flex items-end justify-center transition-opacity duration-300"
-      :class="showBottomBadge ? 'opacity-100' : 'opacity-0 pointer-events-none'"
-    >
-      <span class="bg-amber-300 px-3 py-1">123</span>
-    </div>
   </section>
 </template>
 
@@ -353,6 +371,7 @@ onBeforeUnmount(() => {
   flex-direction: column; /* 一列列往下排 */
   align-items: center; /* 主軸垂直時，這是水平置中 */
   justify-content: start;
+
   border: 0.5px solid var(--color-primary);
 }
 .buffer {
@@ -364,6 +383,9 @@ onBeforeUnmount(() => {
   border: 0.5px solid var(--color-primary);
 }
 .pic:hover img {
+  filter: invert(100%);
+}
+.seemore:hover {
   filter: invert(100%);
 }
 </style>
