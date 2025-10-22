@@ -10,7 +10,7 @@ const icons = [
   // "material-symbols:ar-stickers-sharp",
   "material-symbols:person",
   "material-symbols:background-grid-small-sharp",
-  "material-symbols:coffee-sharp",
+  "material-symbols:article",
   "material-symbols:call-sharp",
 ];
 const menuItems = [
@@ -19,7 +19,7 @@ const menuItems = [
 
   { label: "PROJECTS", to: "/projects" },
   // { label: "MEMBER", to: "/member" },
-  { label: "DONATE", to: "/donate" },
+  { label: "CV", to: "/donate" }, // 要改
   { label: "CONTACT", to: "/contact" },
 ];
 

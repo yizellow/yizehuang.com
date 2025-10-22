@@ -6,14 +6,20 @@ definePageMeta({
   noNavbarPadding: true,
 });
 
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Test from "~/components/pages/Test.vue";
+// import Test from "~/components/pages/Test.vue";
 // import Carousel3D from "~/components/global/Carousel3D.vue";
 import Gallery from "~/components/parts/Gallery.vue";
 import Model from "~/components/three.js/Model.vue";
 
+const isDesktop = ref(false);
+let resizeHandler;
+
+function checkDevice() {
+  isDesktop.value = window.innerWidth >= 1024; // Tailwind lg breakpoint
+}
 gsap.registerPlugin(ScrollTrigger);
 
 const container = ref(null);
@@ -44,6 +50,20 @@ const exhibitions = [
 ];
 
 onMounted(() => {
+  checkDevice();
+
+  // 📏 偵測視窗變化（例如使用者從桌機縮成平板）
+  resizeHandler = () => {
+    const wasDesktop = isDesktop.value;
+    checkDevice();
+    // 若裝置模式改變（桌機↔手機），觸發強制重新掛載
+    if (wasDesktop !== isDesktop.value) {
+      // 觸發 Vue 重新渲染
+      isDesktop.value = !wasDesktop;
+    }
+  };
+  window.addEventListener("resize", resizeHandler);
+
   // 初始 scale 5%
   gsap.set(card.value, {
     scale: 0.05,
@@ -93,6 +113,9 @@ onMounted(() => {
     vid.addEventListener("loadedmetadata", setupVideoScrub);
   }
 });
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", resizeHandler);
+});
 </script>
 
 <template>
@@ -119,7 +142,8 @@ onMounted(() => {
   <section class="relative w-screen h-[100vh]">
     <div class="w-full h-full">
       <client-only>
-        <Gallery />
+        <Gallery v-if="isDesktop" />
+        <div class="w-full h-full bg-amber-300" v-else>test</div>
       </client-only>
       <section
         class="w-full h-auto flex flex-col justify-start items-center p-4"
@@ -179,9 +203,28 @@ onMounted(() => {
         <div
           class="newsreader flex flex-col sm:flex-col md:flex-row items-center md:items-center justify-between gap-4 w-11/12 md:w-1/2 py-4 text-sm sm:text-xs"
         >
-          <p>Email: yize0926@gmail.com</p>
-          <p>WhatsApp: +886 (0) 981488850</p>
-          <p>Instagram: yizellow</p>
+          <a
+            href="mailto:yize0926@gmail.com"
+            class="text-secondary hover:underline cursor-pointer hover:text-primary"
+          >
+            Email: yize0926@gmail.com
+          </a>
+          <a
+            href="https://wa.me/886981488850"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-secondary hover:underline cursor-pointer hover:text-primary"
+          >
+            WhatsApp: +886 981 488 850
+          </a>
+          <a
+            href="https://www.instagram.com/yizellow/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-secondary hover:underline cursor-pointer hover:text-primary"
+          >
+            Instagram: @yizellow
+          </a>
         </div>
       </footer>
     </div>
