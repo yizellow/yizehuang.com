@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
             rel="noopener noreferrer"
             class="text-secondary hover:underline cursor-pointer hover:text-primary"
           >
-            WhatsApp: +886 981 488 850
+            WhatsApp: +886 (0) 981 488 850
           </a>
           <a
             href="https://www.instagram.com/yizellow/"
