@@ -64,7 +64,7 @@ onMounted(() => {
       start: "top bottom",
       end: "bottom bottom",
       scrub: true,
-      markers: true,
+      markers: false,
     },
   });
 
@@ -96,7 +96,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="container" class="relative w-screen h-[280vh]">
+  <div ref="container" class="relative w-screen h-[280vh] bg-white">
     <section class="sticky top-0 h-screen">
       <video
         ref="video"
@@ -116,7 +116,7 @@ onMounted(() => {
     </section>
   </div>
 
-  <section class="relative w-screen h-[100vh] bg-red-500">
+  <section class="relative w-screen h-[100vh]">
     <div class="w-full h-full">
       <client-only>
         <Gallery />
@@ -124,11 +124,13 @@ onMounted(() => {
       <section
         class="w-full h-auto flex flex-col justify-start items-center p-4"
       >
-        <div class="w-1/2 h-full mb-5">
-          <p class="silkscreen text-left text-3xl">CV</p>
+        <div class="sm:w-11/12 md:w-1/2 h-full mb-5">
+          <p class="silkscreen sm:text-center md:text-left text-3xl">CV</p>
         </div>
 
-        <div class="w-1/2 h-full p-4 border-2 border-primary text-xs">
+        <div
+          class="sm:w-11/12 md:w-1/2 h-full p-4 border-2 border-primary text-xs"
+        >
           <div class="mb-2">
             <p class="mb-2 text-sm silkscreen">
               2027 MFA, Frank Mohr Institute
@@ -155,7 +157,7 @@ onMounted(() => {
             >
               <!-- 左邊：時間 + 名稱 -->
               <span class="flex gap-2 items-center">
-                <span class="newsreader text-xs text-secondary">{{
+                <span class="silkscreen text-base text-secondary">{{
                   exhibit.date
                 }}</span>
                 <h1 class="silkscreen text-base text-secondary">
@@ -172,13 +174,13 @@ onMounted(() => {
         </div>
       </section>
       <footer
-        class="w-full h-[10vh] flex boreder text-secondary justify-center items-center mt-10"
+        class="w-full min-h-[12vh] flex text-secondary justify-center items-center mt-10"
       >
         <div
-          class="p-2 newsreader flex flex-row items-center mb-2 justify-between gap-4 w-1/2 h-full"
+          class="newsreader flex flex-col sm:flex-col md:flex-row items-center md:items-center justify-between gap-4 w-11/12 md:w-1/2 py-4 text-sm sm:text-xs"
         >
           <p>Email: yize0926@gmail.com</p>
-          <p>whatsApp: +886 (0) 981488850</p>
+          <p>WhatsApp: +886 (0) 981488850</p>
           <p>Instagram: yizellow</p>
         </div>
       </footer>
