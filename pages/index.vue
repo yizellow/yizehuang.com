@@ -150,7 +150,12 @@ onBeforeUnmount(() => {
         class="w-full h-auto flex flex-col justify-start items-center p-4"
       >
         <div class="sm:w-11/12 md:w-1/2 h-full mb-5">
-          <p class="silkscreen sm:text-center md:text-left text-3xl">CV</p>
+          <p
+            class="scroll-mt-24 silkscreen sm:text-center md:text-left text-3xl"
+            id="cv"
+          >
+            CV
+          </p>
         </div>
 
         <div
