@@ -1,31 +1,43 @@
-<script setup>
+<script setup lang="ts">
 import { gsap } from "gsap";
 import { Icon } from "@iconify/vue";
 import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useHashScroll } from "~/composables/useHashScroll";
+
+const router = useRouter();
+const route = useRoute();
+const { scrollToHash } = useHashScroll();
 
 const frameRef = ref(null);
 const showText = ref(false);
+
 const icons = [
   "material-symbols:other-houses",
-  // "material-symbols:ar-stickers-sharp",
   "material-symbols:person",
   "material-symbols:background-grid-small-sharp",
   "material-symbols:article",
   "material-symbols:call-sharp",
 ];
+
 const menuItems = [
   { label: "HOME", to: "/" },
   { label: "ABOUT", to: "/about" },
-
   { label: "PROJECTS", to: "/projects" },
-  // { label: "MEMBER", to: "/member" },
-  { label: "CV", to: "/donate" }, // 要改
-  { label: "CONTACT", to: "/contact" },
+  { label: "CV", to: "/donate" },
+  { label: "CONTACT", to: { path: "/", hash: "#contact" } },
 ];
+
+function goContact() {
+  if (route.path === "/") {
+    scrollToHash("#contact");
+  } else {
+    router.push({ path: "/", hash: "#contact" });
+  }
+}
 
 watch(showText, (val) => {
   if (val) {
-    // icon 淡出
     gsap.to(".navbar-icon", {
       opacity: 0,
       y: -10,
@@ -33,21 +45,18 @@ watch(showText, (val) => {
       duration: 0.3,
       stagger: 0.05,
     });
-    // text 淡入
     gsap.fromTo(
       ".navbar-text",
       { opacity: 0, scale: 1.2 },
       { opacity: 1, scale: 1, duration: 0.3, stagger: 0.05, delay: 0.2 }
     );
   } else {
-    // text 淡出
     gsap.to(".navbar-text", {
       opacity: 0,
       scale: 1.2,
       duration: 0.3,
       stagger: 0.05,
     });
-    // icon 淡入
     gsap.fromTo(
       ".navbar-icon",
       { opacity: 0, y: -10, scale: 0.8 },
@@ -55,9 +64,9 @@ watch(showText, (val) => {
     );
   }
 });
+
 onMounted(() => {
   const frame = frameRef.value;
-
   gsap.fromTo(
     ".navbar-icon",
     { rotation: 0 },
@@ -70,6 +79,7 @@ onMounted(() => {
   );
   gsap.set(frame, { borderRadius: "40px", width: "40%" });
 });
+
 function onEnter() {
   showText.value = true;
   gsap.to(frameRef.value, {
@@ -79,6 +89,7 @@ function onEnter() {
     duration: 0.5,
   });
 }
+
 function onLeave() {
   showText.value = false;
   gsap.to(frameRef.value, {
@@ -88,25 +99,27 @@ function onLeave() {
     duration: 0.5,
   });
 }
-function onBtnEnter(idx) {
+
+const onBtnEnter = (idx: number) => {
   gsap.to(`.navbar-text-btn-${idx}`, {
     backgroundColor:
       "color-mix(in srgb, var(--color-secondary) 80%, transparent)",
-    color: "var( --color-base-100)",
+    color: "var(--color-base-100)",
     scale: 1.08,
     boxShadow: "0 2px 8px 0 rgba(0,0,0,0.12)",
     duration: 0,
   });
-}
-function onBtnLeave(idx) {
+};
+
+const onBtnLeave = (idx: number) => {
   gsap.to(`.navbar-text-btn-${idx}`, {
     backgroundColor: "transparent",
-    color: "var( --color-secondary)",
+    color: "var(--color-secondary)",
     scale: 1,
     boxShadow: "0 0px 0px 0 rgba(0,0,0,0)",
     duration: 0,
   });
-}
+};
 </script>
 
 <template>
@@ -120,7 +133,7 @@ function onBtnLeave(idx) {
       <div class="flex w-full items-center justify-center">
         <div v-show="showText" class="w-full flex items-center justify-center">
           <NuxtLink
-            v-for="(item, idx) in menuItems"
+            v-for="(item, idx) in menuItems.slice(0, 4)"
             :key="item.label"
             :class="[
               'navbar-text',
@@ -135,11 +148,35 @@ function onBtnLeave(idx) {
               'cursor-pointer',
             ]"
             :to="item.to"
-            @mouseenter="onBtnEnter(idx)"
-            @mouseleave="onBtnLeave(idx)"
-            >{{ item.label }}</NuxtLink
+            @mouseenter="() => onBtnEnter(idx)"
+            @mouseleave="() => onBtnLeave(idx)"
           >
+            {{ item.label }}
+          </NuxtLink>
+
+          <template v-if="route.path === '/'">
+            <button
+              class="navbar-text silkscreen navbar-text-btn-4 flex-1 mx-2 py-1 text-center text-lg rounded-lg cursor-pointer"
+              type="button"
+              @mouseenter="() => onBtnEnter(4)"
+              @mouseleave="() => onBtnLeave(4)"
+              @click="goContact"
+            >
+              CONTACT
+            </button>
+          </template>
+          <template v-else>
+            <NuxtLink
+              :to="{ path: '/', hash: '#contact' }"
+              class="navbar-text silkscreen navbar-text-btn-4 flex-1 mx-2 py-1 text-center text-lg rounded-lg cursor-pointer"
+              @mouseenter="() => onBtnEnter(4)"
+              @mouseleave="() => onBtnLeave(4)"
+            >
+              CONTACT
+            </NuxtLink>
+          </template>
         </div>
+
         <div v-show="!showText" class="w-full flex items-center justify-center">
           <Icon
             v-for="icon in icons"

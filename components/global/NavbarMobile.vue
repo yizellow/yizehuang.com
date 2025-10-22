@@ -20,7 +20,7 @@ const menuItems = [
   { label: "PROJECTS", to: "/projects" },
   { label: "ABOUT", to: "/about" },
   // { label: "MEMBER", to: "/member" },
-  { label: "DONATE", to: "/donate" },
+  { label: "CV", to: "/donate" },
   { label: "CONTACT", to: "/contact" },
 ];
 

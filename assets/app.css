@@ -39,3 +39,6 @@
   outline: 1px solid red;
 } */
 /* 有點治標題橫向滾動條的bug */
+html {
+  scroll-behavior: smooth;
+}
