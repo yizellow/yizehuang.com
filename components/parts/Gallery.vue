@@ -118,7 +118,9 @@ onMounted(() => {
   camera = new THREE.PerspectiveCamera(75, W / H, 0.1, 1000);
   camera.position.set(0, 0, -40);
 
-  controls = new OrbitControls(camera, cssRenderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
+  renderer.domElement.style.pointerEvents = "none";
+  cssRenderer.domElement.style.pointerEvents = "auto";
   controls.enableDamping = false;
   controls.enableRotate = false; // 禁用旋轉
   controls.enableZoom = false; // 禁用縮放
@@ -172,7 +174,9 @@ onMounted(() => {
       </section>
      <div class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2  rounded-4xl
  text-primary flex justify-center items-center mb-2 p-2 seemore">
-      <p class="text-xs ">see all projects......</p>
+
+<a href="/projects" class="text-xs text-blue-500 hover:underline">see all projects......</a>
+
      
      
      
