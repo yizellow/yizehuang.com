@@ -36,7 +36,7 @@ const exhibitions = [
   },
   { date: "12.2019", title: "Myself", location: "8 and one-half Gallery" },
 ];
-gsap.registerPlugin(ScrollTrigger);
+// GSAP 插件已在 plugins/gsap.client.ts 中註冊
 
 const containerRef = ref(null);
 let renderer, cssRenderer, scene, camera, controls, animationId;

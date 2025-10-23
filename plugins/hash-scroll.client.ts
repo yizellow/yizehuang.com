@@ -5,8 +5,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  // 只在 client 執行，直接註冊即可（多次註冊安全）
-  gsap.registerPlugin(ScrollTrigger);
+  // GSAP 插件已在 plugins/gsap.client.ts 中註冊
 
   const router = useRouter();
 
