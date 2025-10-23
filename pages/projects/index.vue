@@ -1,13 +1,7 @@
 <script setup>
-import Gallery from "~/components/parts/Gallery.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
+import gsap from "gsap";
 
-definePageMeta({
-  layout: "default",
-  noNavbarPadding: false,
-});
-
-// ✅ 你的圖片資料
 const slides = [
   {
     img: "https://cdna.artstation.com/p/assets/images/images/082/633/124/large/yize-huang-2024-12-06-9-01-23.jpg?1733490357",
@@ -31,35 +25,72 @@ const slides = [
   },
 ];
 
-// （可選）如果你要拿容器寬高：
 const container = ref(null);
-const W = ref(0);
-const H = ref(0);
+
+// 用於展示的列表，初始為 slides
+const displaySlides = ref([...slides]);
+
+// Intersection Observer
+const observer = ref(null);
+const sentinel = ref(null);
+
+const loadMore = () => {
+  // 將原 slides append 到 displaySlides
+  displaySlides.value = [...displaySlides.value, ...slides];
+};
 
 onMounted(() => {
-  if (container.value) {
-    W.value = container.value.clientWidth;
-    H.value = container.value.clientHeight;
-    console.log("Container size:", W.value, H.value);
-  }
+  nextTick(() => {
+    observer.value = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadMore();
+          }
+        });
+      },
+      { root: null, rootMargin: "0px", threshold: 1.0 }
+    );
+
+    if (sentinel.value) {
+      observer.value.observe(sentinel.value);
+    }
+  });
+  let scrollY = 0; // 真實滾動
+  let currentY = 0; // 實際移動值
+  const ease = 0.1; // 慣性強度，越小延遲越明顯
+
+  const update = () => {
+    // 緩動差值
+    currentY += (scrollY - currentY) * ease;
+
+    // 應用到 container
+    gsap.set(container.value, {
+      y: -currentY,
+    });
+
+    requestAnimationFrame(update);
+  };
+  window.addEventListener("scroll", () => {
+    scrollY = window.scrollY;
+  });
+
+  update();
 });
 </script>
-
 <template>
   <main
     ref="container"
     class="w-screen h-auto flex justify-center items-start p-4"
   >
     <section
-      class="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8"
+      class="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12"
     >
-      <!-- 這裡用 slides 取代 v-for 數字 -->
       <div
-        v-for="(item, index) in slides"
+        v-for="(item, index) in displaySlides"
         :key="index"
         class="flex flex-col justify-center items-center overflow-hidden transition"
       >
-        <!-- 圖片區 -->
         <div class="relative w-full">
           <img
             :src="item.img"
@@ -67,15 +98,16 @@ onMounted(() => {
             class="w-full h-auto object-cover"
           />
         </div>
-
-        <!-- 文字區 -->
         <div class="flex justify-between items-center w-full px-1 pt-2">
-          <h3 class="text-sm newsreader text-secondary/80">
+          <h3 class="text-xs newsreader text-secondary/70">
             {{ item.caption }}
           </h3>
           <div class="text-primary text-xs silkscreen">2025</div>
         </div>
       </div>
+
+      <!-- Sentinel 用於觸發無限滾動 -->
+      <div ref="sentinel" class="h-1 w-full"></div>
     </section>
   </main>
 </template>
