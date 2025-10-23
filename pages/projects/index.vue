@@ -33,6 +33,7 @@ const displaySlides = ref([...slides]);
 // Intersection Observer
 const observer = ref(null);
 const sentinel = ref(null);
+const card = ref(null);
 
 const loadMore = () => {
   // 將原 slides append 到 displaySlides
@@ -40,6 +41,13 @@ const loadMore = () => {
 };
 
 onMounted(() => {
+  gsap.fromTo(
+    card.value,
+
+    { ease: "power4.in", opacity: 0 },
+    { opacity: 100 }
+  );
+
   nextTick(() => {
     observer.value = new IntersectionObserver(
       (entries) => {
@@ -84,7 +92,7 @@ onMounted(() => {
     class="w-screen h-auto flex justify-center items-start p-4"
   >
     <section
-      class="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12"
+      class="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 sm:mb-5"
     >
       <div
         v-for="(item, index) in displaySlides"
@@ -95,14 +103,16 @@ onMounted(() => {
           <img
             :src="item.img"
             :alt="item.caption"
-            class="w-full h-auto object-cover"
+            class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
           />
         </div>
-        <div class="flex justify-between items-center w-full px-1 pt-2">
-          <h3 class="text-xs newsreader text-secondary/70">
+        <div
+          class="flex justify-between items-center w-full px-1 pt-2 sm:text-base md:text-xs"
+        >
+          <h3 class="newsreader text-secondary/70">
             {{ item.caption }}
           </h3>
-          <div class="text-primary text-xs silkscreen">2025</div>
+          <div class="text-primary silkscreen">2025</div>
         </div>
       </div>
 

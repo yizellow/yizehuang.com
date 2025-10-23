@@ -151,7 +151,7 @@ onMounted(() => {
     .map(
       ({ img, caption }) => `
       <div class="container  p-2 m-2  bg-white/80">
-        <div class="pic"><img src="${img}" /></div>
+        <div class="pic "><img src="${img}" /></div>
         <p class="opacity-90 ">${caption}</p>
       </div>
     `
@@ -173,6 +173,9 @@ onMounted(() => {
      <div class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2  rounded-4xl
  text-primary flex justify-center items-center mb-2 p-2 seemore">
       <p class="text-xs ">see all projects......</p>
+     
+     
+     
       </div>
 
     </main>
