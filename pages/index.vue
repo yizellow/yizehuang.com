@@ -121,10 +121,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="container" class="relative w-screen h-[280vh] bg-white">
-    <section class="sticky top-0 h-screen">
+    <section class="sticky top-0 w-full h-screen">
       <video
         ref="video"
-        class="[w-100vw] h-screen z-5 mix-blend-darken"
+        class="w-full h-screen z-5 mix-blend-darken"
         src="/videos/yizetitle_fast2.mp4"
         muted
         playsinline
