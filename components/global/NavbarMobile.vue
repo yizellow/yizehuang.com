@@ -1,74 +1,83 @@
-<script setup>
+<script setup lang="ts">
 import { gsap } from "gsap";
 import { Icon } from "@iconify/vue";
-import { ref, nextTick } from "vue";
-import { useRouter } from "vue-router";
+import { ref, nextTick, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useHashScroll } from "~/composables/useHashScroll";
 
-// DOM 參照
-const menuRef = ref(null);
-const navListRef = ref(null);
+const router = useRouter();
+const route = useRoute();
+const { scrollToHash } = useHashScroll();
 
-const navTitles = ref([]);
+const menuRef = ref<HTMLElement | null>(null);
+const navListRef = ref<HTMLElement | null>(null);
+const navTitles = ref<HTMLElement[]>([]);
 const menuIconSwitch = ref(true);
-
-// 狀態與鎖
 const listShow = ref(false);
 const animating = ref(false);
 
 const menuItems = [
-  { label: "HOME", to: "/" },
-  { label: "PROJECTS", to: "/projects" },
-  { label: "ABOUT", to: "/about" },
-  // { label: "MEMBER", to: "/member" },
-  { label: "DONATE", to: "/donate" },
-  { label: "CONTACT", to: "/contact" },
+  { label: "HOME", to: "/", action: "push" },
+  { label: "PROJECTS", to: "/projects", action: "push" },
+  { label: "ABOUT", to: "/about", action: "push" },
+  { label: "CV", to: { path: "/", hash: "#cv" }, action: "scrollCv" },
+  {
+    label: "CONTACT",
+    to: { path: "/", hash: "#contact" },
+    action: "scrollContact",
+  },
 ];
 
-const router = useRouter();
+async function onItemClick(item: (typeof menuItems)[number]) {
+  if (listShow.value) await expandNav();
+  await nextTick();
+
+  if (item.action === "scrollCv") {
+    if (route.path === "/") scrollToHash("#cv");
+    else router.push(item.to as any);
+    return;
+  }
+  if (item.action === "scrollContact") {
+    if (route.path === "/") scrollToHash("#contact");
+    else router.push(item.to as any);
+    return;
+  }
+  router.push(item.to as any);
+}
 
 function toggleMenuIcon() {
   menuIconSwitch.value = !menuIconSwitch.value;
 }
 
+// 不累加旋轉：用 timeline 的 to().set()，結束清 transform
 function toggleAnimation() {
-  gsap.to(".icon-navbar", {
-    rotate: "-=360",
-    duration: 0.5,
-    ease: "power2.inOut",
+  const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+  tl.to(".icon-navbar", { rotation: 360, duration: 0.45 }).set(".icon-navbar", {
+    clearProps: "transform",
   });
-  gsap.to(".home", {
-    rotationY: "+=360",
-    duration: 0.7,
-    ease: "power2.inOut",
-  });
+  tl.to(".home", { rotationY: 360, duration: 0.6 }, 0).set(
+    ".home",
+    { clearProps: "transform" },
+    ">"
+  ); // 同步開始
 }
 
-// 切換動畫
 async function expandNav() {
   toggleAnimation();
   toggleMenuIcon();
-
   if (animating.value) return;
   animating.value = true;
 
   await nextTick();
-
-  // 清除之前的動畫
   gsap.killTweensOf(navListRef.value);
   gsap.killTweensOf(navTitles.value);
 
   if (!listShow.value) {
     listShow.value = true;
-
     const tl = gsap.timeline();
-    // nav 外框展開動畫
     tl.fromTo(
       navListRef.value,
-      {
-        transformOrigin: "top center",
-        scaleY: 0,
-        opacity: 0,
-      },
+      { transformOrigin: "top center", scaleY: 0, opacity: 0 },
       {
         scaleY: 1,
         opacity: 1,
@@ -79,9 +88,7 @@ async function expandNav() {
         },
       }
     );
-
-    // 項目淡入 + stagger
-    if (navTitles.value && navTitles.value.length > 0) {
+    if (navTitles.value.length) {
       tl.fromTo(
         navTitles.value,
         { opacity: 0 },
@@ -96,43 +103,34 @@ async function expandNav() {
         },
         "-=0.07"
       );
-    } else {
-      animating.value = false;
     }
   } else {
-    // 收起動畫
     const tl = gsap.timeline();
-    if (navTitles.value && navTitles.value.length > 0) {
+    if (navTitles.value.length) {
       tl.fromTo(
         navTitles.value,
         { opacity: 1 },
         {
           opacity: 0,
           duration: 0.4,
-          stagger: {
-            each: 0.01,
-            from: "end",
-          },
+          stagger: { each: 0.01, from: "end" },
           ease: "power3.out",
         }
-      );
-      tl.to(
-        navListRef.value,
-        {
-          scaleY: 0,
-          opacity: 0,
-          duration: 0.4,
-          ease: "power3.out",
-          onComplete: () => {
-            listShow.value = false;
-            animating.value = false;
-          },
-        },
-        "<"
-      );
+      )
+        .to(
+          navListRef.value,
+          { scaleY: 0, opacity: 0, duration: 0.4, ease: "power3.out" },
+          "<"
+        )
+        .add(() => {
+          listShow.value = false;
+          animating.value = false;
+          gsap.set(navListRef.value, { clearProps: "transform" });
+        });
     } else {
       listShow.value = false;
       animating.value = false;
+      gsap.set(navListRef.value, { clearProps: "transform" });
     }
   }
 }
@@ -140,32 +138,22 @@ async function expandNav() {
 onMounted(() => {
   gsap.fromTo(
     [".topNav", ".home"],
-    {
-      opacity: 0,
-      y: -60,
-    },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 0.3,
-    }
+    { opacity: 0, y: -60 },
+    { opacity: 1, y: 0, duration: 0.3 }
   );
-  gsap.to(".icon-navbar", {
-    rotate: 360,
-    duration: 0.5,
-  });
+  gsap
+    .to(".icon-navbar", { rotation: 360, duration: 0.5 })
+    .then(() => gsap.set(".icon-navbar", { clearProps: "transform" }));
 });
 
 router.afterEach(() => {
-  if (listShow.value) {
-    expandNav();
-  }
+  if (listShow.value) expandNav();
 });
 </script>
 
 <template>
   <div class="topNav flex justify-center items-center flex-col opacity-0">
-    <!-- 上方主選單 -->
+    <!-- 上方主選單（icon 區塊保持原樣） -->
     <nav
       class="flex flex-row justify-between items-center w-4/5 px-6 mt-2 min-h-12 rounded-full border border-[var(--color-secondary)] shadow-md"
     >
@@ -194,29 +182,55 @@ router.afterEach(() => {
       </div>
     </nav>
 
-    <!-- 下拉選單 -->
+    <!-- 下拉選單：同頁 CV/CONTACT 用 button（避免瞬跳），其餘維持 NuxtLink -->
     <nav
       v-show="listShow"
       ref="navListRef"
       class="nav-list flex flex-col justify-around items-center w-4/5 mt-2 rounded-2xl border border-[var(--color-secondary)] shadow-md overflow-hidden"
     >
-      <NuxtLink
-        v-for="(item, index) in menuItems"
-        :key="item.label"
-        :to="item.to"
-        class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0 cursor-pointer"
-      >
-        <div
-          :ref="
-            (el) => {
-              if (el) navTitles[index] = el;
-            }
+      <template v-for="(item, index) in menuItems" :key="item.label">
+        <button
+          v-if="
+            route.path === '/' &&
+            (item.action === 'scrollCv' || item.action === 'scrollContact')
           "
+          type="button"
           class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0 cursor-pointer"
+          @click.prevent="onItemClick(item)"
         >
-          <p class="text-sm newsreader">{{ item.label }}</p>
-        </div>
-      </NuxtLink>
+          <div
+            :ref="(el:any) => { if (el) navTitles[index] = el }"
+            class="flex flex-row w-full justify-around items-center min-h-12"
+          >
+            <p class="text-sm newsreader">{{ item.label }}</p>
+          </div>
+        </button>
+
+        <NuxtLink
+          v-else
+          :to="item.to"
+          class="flex flex-row w-full justify-around items-center min-h-12 border-b last:border-b-0 cursor-pointer"
+          @click.prevent="onItemClick(item)"
+        >
+          <div
+            :ref="(el:any) => { if (el) navTitles[index] = el }"
+            class="flex flex-row w-full justify-around items-center min-h-12"
+          >
+            <p class="text-sm newsreader">{{ item.label }}</p>
+          </div>
+        </NuxtLink>
+      </template>
     </nav>
   </div>
 </template>
+
+<style scoped>
+.topNav {
+  perspective: 1000px;
+}
+.icon-navbar,
+.home {
+  backface-visibility: hidden;
+  will-change: transform;
+}
+</style>

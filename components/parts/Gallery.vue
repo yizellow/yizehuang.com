@@ -268,7 +268,7 @@ onMounted(() => {
                 frontMain.getBoundingClientRect().height) - faceHeight
             )}`,
           scrub: true,
-          markers: true,
+          markers: false,
           invalidateOnRefresh: true,
         },
       }
@@ -301,7 +301,7 @@ onMounted(() => {
                     frontMain.getBoundingClientRect().height) - faceHeight
                 )}`,
               scrub: true,
-              markers: true,
+              markers: false,
               invalidateOnRefresh: true,
             },
           }
