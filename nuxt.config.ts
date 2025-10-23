@@ -9,4 +9,13 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   css: ["~/assets/app.css", "~/assets/fonts.css"],
+  ssr: true,
+  nitro: {
+    experimental: {
+      wasm: true,
+    },
+  },
+  build: {
+    transpile: ["gsap"],
+  },
 });

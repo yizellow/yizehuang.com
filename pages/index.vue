@@ -21,7 +21,7 @@ let resizeHandler;
 function checkDevice() {
   isDesktop.value = window.innerWidth >= 1024; // Tailwind lg breakpoint
 }
-gsap.registerPlugin(ScrollTrigger);
+// GSAP 插件已在 plugins/gsap.client.ts 中註冊
 
 const container = ref(null);
 const card = ref(null);
