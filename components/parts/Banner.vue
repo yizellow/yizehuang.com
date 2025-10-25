@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[5vh] overflow-hidden relative opacity-90">
+  <div class="sm:h-[5vh] md:[h-3vh] overflow-hidden relative opacity-90">
     <div class="flex animate-scroll whitespace-nowrap">
       <div class="flex items-center text-secondary text-sm px-4">
         <p class="text-primary bg-secondary m-2 p-2 silkscreen">
