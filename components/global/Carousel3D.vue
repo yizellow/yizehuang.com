@@ -1,10 +1,22 @@
 <template>
-  <div
-    ref="carouselContainer"
-    :class="cn('relative w-full h-full z-20 bg-white', '')"
-    @mousedown="onDragStart"
-    @touchstart="onDragStart"
-  ></div>
+  <div class="w-full h-full">
+    <div
+      ref="carouselContainer"
+      :class="cn('relative w-full h-full z-20 mb-20', '')"
+      @mousedown="onDragStart"
+      @touchstart="onDragStart"
+    >
+      <!-- 連接到 projects 頁面的按鈕 - 放在 3D 容器內部下方 -->
+      <div class="absolute bottom-15 left-1/2 transform -translate-x-1/2 z-30">
+        <NuxtLink
+          to="/projects"
+          class="inline-flex silkscreen items-center px-6 py-3 text-xs text-secondary bg-primary backdrop-blur-sm border-1 border-secondary rounded-lg hover:bg-white hover:border-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          see more projects......
+        </NuxtLink>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -17,21 +29,45 @@ import {
 import { animate, type AnimationPlaybackControls } from "motion-v";
 import { cn } from "@/lib/utils";
 
-// 圖片列表
+// 圖片列表 - 使用與 Gallery 相同的格式
 const items = [
-  "https://picsum.photos/450/600?random=1",
-  "https://picsum.photos/450/600?random=2",
-  "https://picsum.photos/450/600?random=3",
-  "https://picsum.photos/450/600?random=4",
-  "https://picsum.photos/450/600?random=5",
-  "https://picsum.photos/450/600?random=1",
-  "https://picsum.photos/450/600?random=2",
-  "https://picsum.photos/450/600?random=3",
+  {
+    img: "https://cdna.artstation.com/p/assets/images/images/082/633/124/large/yize-huang-2024-12-06-9-01-23.jpg?1733490357",
+    caption: "CHIPS",
+  },
+  {
+    img: "https://cdnb.artstation.com/p/assets/images/images/052/116/789/large/yize-huang-plastic-wrap-protection-laocoon-and-his-sons.jpg?1658985491",
+    caption: "3D modeling",
+  },
+  {
+    img: "https://cdnb.artstation.com/p/assets/images/images/082/626/611/large/yize-huang-j4.jpg?1733473161",
+    caption: "Yizellow",
+  },
+  {
+    img: "https://cdna.artstation.com/p/assets/images/images/082/332/470/large/yize-huang-2024-11-27-5-48-00.jpg?1732701058",
+    caption: "Travel and my film camera",
+  },
+  {
+    img: "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
+    caption: "Light Installation",
+  },
+  {
+    img: "https://picsum.photos/450/600?random=6",
+    caption: "Project 6",
+  },
+  {
+    img: "https://picsum.photos/450/600?random=7",
+    caption: "Project 7",
+  },
+  {
+    img: "https://picsum.photos/450/600?random=8",
+    caption: "Project 8",
+  },
 ];
 
-// 卡片大小與拖曳靈敏度
+// 卡片大小與拖曳靈敏度 - 調整為更適合的比例
 const width = 600;
-const height = 450;
+const height = 800;
 const sensitivity = 0.006;
 
 const carouselContainer = ref<HTMLDivElement>();
@@ -70,15 +106,51 @@ onMounted(() => {
   scene.add(carousel);
 
   // 4. 加入卡片並綁定最簡單的 hover 事件
-  items.forEach((img, idx) => {
+  items.forEach((item, idx) => {
     const el = document.createElement("div");
-    Object.assign(el.style, {
-      width: `${width}px`,
-      height: `${height}px`,
-      backgroundImage: `url(${img})`,
-      backgroundSize: "cover",
-      transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s",
-    });
+    el.className = "container p-2 m-2 bg-white/80 shadow-md";
+    el.style.width = `${width}px`;
+    el.style.height = `${height}px`;
+    el.style.transition =
+      "transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s";
+    el.style.display = "flex";
+    el.style.flexDirection = "column";
+    el.style.padding = "12px";
+    el.style.margin = "8px";
+    el.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+    el.style.borderRadius = "8px";
+    el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
+
+    // 創建圖片容器
+    const picDiv = document.createElement("div");
+    picDiv.className = "pic";
+    picDiv.style.width = "100%";
+    picDiv.style.height = "85%";
+    picDiv.style.overflow = "hidden";
+    // picDiv.style.borderRadius = "6px";
+    picDiv.style.marginBottom = "8px";
+
+    const img = document.createElement("img");
+    img.src = item.img;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover";
+
+    picDiv.appendChild(img);
+
+    // 創建標題
+    const captionP = document.createElement("p");
+    captionP.textContent = item.caption;
+    captionP.className = "silkscreen";
+    captionP.style.opacity = "0.9";
+    captionP.style.textAlign = "top";
+    captionP.style.marginTop = "8px";
+    captionP.style.fontSize = "30px";
+    captionP.style.fontWeight = "500";
+    captionP.style.color = "oklch(54% 0.281 293.009)";
+
+    el.appendChild(picDiv);
+    el.appendChild(captionP);
 
     // 滑鼠進入放大 & 慢速轉
     el.addEventListener("mouseenter", () => {
