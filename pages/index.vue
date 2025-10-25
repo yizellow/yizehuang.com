@@ -14,6 +14,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import Carousel3D from "~/components/global/Carousel3D.vue";
 import Gallery from "~/components/parts/Gallery.vue";
 import Model from "~/components/three.js/Model.vue";
+import Banner from "~/components/parts/Banner.vue";
 
 const isDesktop = ref(false);
 let resizeHandler;
@@ -142,6 +143,7 @@ onBeforeUnmount(() => {
   <section class="relative w-screen h-[100vh]">
     <div class="w-full h-full">
       <client-only>
+        <Banner />
         <Gallery v-if="isDesktop" />
         <div class="w-full h-full mb-25" v-else>
           <Carousel3D />
