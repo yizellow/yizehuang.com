@@ -11,7 +11,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick, watch } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 // import Test from "~/components/pages/Test.vue";
-// import Carousel3D from "~/components/global/Carousel3D.vue";
+import Carousel3D from "~/components/global/Carousel3D.vue";
 import Gallery from "~/components/parts/Gallery.vue";
 import Model from "~/components/three.js/Model.vue";
 
@@ -21,7 +21,6 @@ let resizeHandler;
 function checkDevice() {
   isDesktop.value = window.innerWidth >= 1024; // Tailwind lg breakpoint
 }
-// GSAP 插件已在 plugins/gsap.client.ts 中註冊
 
 const container = ref(null);
 const card = ref(null);
@@ -144,7 +143,9 @@ onBeforeUnmount(() => {
     <div class="w-full h-full">
       <client-only>
         <Gallery v-if="isDesktop" />
-        <div class="w-full h-full bg-amber-300" v-else>test</div>
+        <div class="w-full h-full mb-25" v-else>
+          <Carousel3D />
+        </div>
       </client-only>
       <section
         class="w-full h-auto flex flex-col justify-start items-center p-4"
@@ -159,7 +160,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div
-          class="sm:w-11/12 md:w-1/2 h-full p-4 border-2 border-primary text-xs"
+          class="sm:w-11/12 md:w-1/2 h-auto p-4 border-2 border-primary text-xs"
         >
           <div class="mb-2">
             <p class="mb-2 text-sm silkscreen">
@@ -205,7 +206,7 @@ onBeforeUnmount(() => {
       </section>
       <footer
         id="contact"
-        class="w-full min-h-[12vh] flex text-secondary justify-center items-center mt-10"
+        class="w-full min-h-[20vh] flex text-secondary justify-center items-center mt-5 sm:mb-10"
       >
         <div
           class="newsreader flex flex-col sm:flex-col md:flex-row items-center md:items-center justify-between gap-4 w-11/12 md:w-1/2 py-4 text-sm sm:text-xs"
