@@ -141,11 +141,11 @@ onBeforeUnmount(() => {
   </div>
 
   <section class="relative w-screen h-[100vh]">
+    <Banner />
     <div class="w-full h-full">
       <client-only>
-        <Banner />
         <Gallery v-if="isDesktop" />
-        <div class="w-full h-full mb-25" v-else>
+        <div class="w-full h-full" v-else>
           <Carousel3D />
         </div>
       </client-only>

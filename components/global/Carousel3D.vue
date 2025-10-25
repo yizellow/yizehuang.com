@@ -1,21 +1,21 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-8/10">
     <div
       ref="carouselContainer"
-      :class="cn('relative w-full h-full z-20 mb-20', '')"
+      :class="cn('relative w-full h-8/10 z-20 mb-20 bg-primary', '')"
       @mousedown="onDragStart"
       @touchstart="onDragStart"
     >
       <!-- 連接到 projects 頁面的按鈕 - 放在 3D 容器內部下方 -->
-      <div class="absolute bottom-15 left-1/2 transform -translate-x-1/2 z-30">
-        <NuxtLink
-          to="/projects"
-          class="inline-flex silkscreen items-center px-6 py-3 text-xs text-secondary bg-primary backdrop-blur-sm border-1 border-secondary rounded-lg hover:bg-white hover:border-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl"
-        >
-          see more projects......
-        </NuxtLink>
-      </div>
     </div>
+  </div>
+  <div class="absolute bottom-40 left-1/2 transform -translate-x-1/2 z-30">
+    <NuxtLink
+      to="/projects"
+      class="inline-flex silkscreen items-center px-6 py-3 text-xs text-primary bg-secondary backdrop-blur-sm border-1 border-primary rounded-lg hover:bg-white hover:border-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+    >
+      see more projects......
+    </NuxtLink>
   </div>
 </template>
 
