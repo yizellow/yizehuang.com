@@ -3,6 +3,23 @@ definePageMeta({
   layout: "default",
   noNavbarPadding: false,
 });
+
+import { ref, onMounted } from "vue";
+import gsap from "gsap";
+import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
+
+gsap.registerPlugin(ScrambleTextPlugin);
+
+const introP = ref(null);
+
+onMounted(() => {
+  gsap.to(introP.value, {
+    duration: 1.2,
+    scrambleText: {
+      text: "Each theme is composed of textual narratives, artworks, and a virtual exhibition, and will be continuously updated and revised; all updates are shown in the last updated date. The virtual exhibition is accessible on desktop devices only and does not support mobile devices.",
+    },
+  });
+});
 </script>
 
 <template>
@@ -15,10 +32,11 @@ definePageMeta({
       </p>
 
       <p
+        ref="introP"
         class="newsreader border-primary text-secondary text-md leading-relaxed p-4 border-2 rounded-b-sm"
       >
         Each theme is composed of textual narratives, artworks, and a virtual
-        exhibition , and will be continuously updated and revised;all updates
+        exhibition, and will be continuously updated and revised; all updates
         are shown in the last updated date. The virtual exhibition is accessible
         on desktop devices only and does not support mobile devices.
       </p>
