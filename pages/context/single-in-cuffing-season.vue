@@ -11,7 +11,8 @@ const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
 </script>
 
 <template>
-  <main class="mx-auto max-w-6xl px-6 py-10">
+  <main class="prose mx-auto max-w-6xl px-6 py-10">
+   
     <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
       <!-- 左：目錄 1/3 -->
       <aside class="lg:col-span-2">
@@ -53,3 +54,12 @@ const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
     </div>
   </main>
 </template>
+
+<style scoped>
+prose h1 {
+  color: green; /* Adjust based on your header height */
+}
+p {
+  color: blue;
+}
+</style>

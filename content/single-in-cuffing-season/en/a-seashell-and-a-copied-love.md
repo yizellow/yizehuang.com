@@ -1,11 +1,16 @@
-# [2理所當然地結婚]{style="font-size:48px;color:#ef4444;"}
+Hello, this is a [Markdown]{.px-1 .bg-blue-200 .rounded-lg} file!
 
-## [3理所當然地結婚]{style="font-size:36px;color:#3b82f6;"}
+::div{.w-full .bg-red-200 .p-4 .silkscreen }
+Another way to use it!
+
+# 2理所當然地結婚
+
+## 3理所當然地結婚
 
 <h1> title</h1>
 
 Please be careful!
- 
+
 ## default
 
 Using MDC & Vue components is addictive.
@@ -35,3 +40,4 @@ The **alert** component.
 在我經驗裡婚姻不一定是幸福的象徵，俗話說「婚姻是愛情的墳墓」 ，兩個人再一起不一定變得更強壯，我看見許多人在婚姻裡死傷慘重，或許他們把結婚當作感情問題的解方；而這場沒意義婚姻正好相反，對我同而言卻是一種解脫。當我與其他人說我們結婚的同時，象徵我早已定下、有個伴，不在求偶的戰場裡面遍體鱗傷，也不必再面對，我在情場有多失敗的事實。
 
 理所當然，她最後並沒有飛來美國，我們也沒有在拉斯維加斯結婚，我也沒有拿到綠卡，但我最後並沒有喜歡上美國，所以也沒有遺憾。等我回台灣的時候，我們就很快就離婚了，也不再是朋友。後來我不常想起她，只不過時常拿起我藏在我錢包中的結婚照，跟我其他人說笑，說：「我沒有過愛情，但我有一段婚姻。」
+::
