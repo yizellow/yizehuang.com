@@ -12,6 +12,7 @@
   "dependencies": {
     "@iconify/vue": "^5.0.0",
     "@nuxt/content": "^3.10.0",
+    "@nuxtjs/i18n": "^10.2.1",
     "@tailwindcss/vite": "^4.1.5",
     "better-sqlite3": "^12.5.0",
     "clsx": "^2.1.1",
