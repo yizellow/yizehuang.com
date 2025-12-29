@@ -18,8 +18,8 @@ const animating = ref(false);
 
 const menuItems = [
   { label: "HOME", to: "/", action: "push" },
+  { label: "CONTEXT", to: "/context", action: "push" },
   { label: "PROJECTS", to: "/projects", action: "push" },
-  { label: "ABOUT", to: "/about", action: "push" },
   { label: "CV", to: { path: "/", hash: "#cv" }, action: "scrollCv" },
   {
     label: "CONTACT",
@@ -199,7 +199,11 @@ router.afterEach(() => {
           @click.prevent="onItemClick(item)"
         >
           <div
-            :ref="(el:any) => { if (el) navTitles[index] = el }"
+            :ref="
+              (el: any) => {
+                if (el) navTitles[index] = el;
+              }
+            "
             class="flex flex-row w-full justify-around items-center min-h-12"
           >
             <p class="text-sm newsreader">{{ item.label }}</p>
@@ -213,7 +217,11 @@ router.afterEach(() => {
           @click.prevent="onItemClick(item)"
         >
           <div
-            :ref="(el:any) => { if (el) navTitles[index] = el }"
+            :ref="
+              (el: any) => {
+                if (el) navTitles[index] = el;
+              }
+            "
             class="flex flex-row w-full justify-around items-center min-h-12"
           >
             <p class="text-sm newsreader">{{ item.label }}</p>

@@ -136,7 +136,7 @@ const hoverLeave = (evt: MouseEvent) =>
           <NuxtLink
             v-for="(item, idx) in [
               { label: 'HOME', to: '/' },
-              { label: 'ABOUT', to: '/about' },
+              { label: 'CONTEXT', to: '/context' },
               { label: 'PROJECTS', to: '/projects' },
             ]"
             :key="item.label"
