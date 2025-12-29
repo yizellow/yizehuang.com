@@ -1,43 +1,15 @@
-Hello, this is a [Markdown]{.px-1 .bg-blue-200 .rounded-lg} file!
+# Deformed Love
 
-::div{.w-full .bg-red-200 .p-4 .silkscreen }
-Another way to use it!
+## A Seashell and a Copied Love
 
-# 2理所當然地結婚
+When I was nineteen, I was diagnosed with Asperger’s syndrome. It explained why, ever since I was young, I had always felt out of place among other people. I felt relieved to finally understand myself, but at the same time I was angry about all the misunderstandings and unfairness I had endured in the past.
+Before that, I felt like a machine hiding in human society. In order not to be discovered, I did my best to imitate other people’s behavior. Whenever I told people that I have Asperger’s, they would look at me in disbelief. I often told them, “I don’t really feel anything about what you’re going through, but I can pretend to cry for you.” Even after saying this, some people still didn’t believe me, which probably meant that I acted well enough.
 
-## 3理所當然地結婚
+I later learned that people with mild symptoms like mine often share similar experiences. Because we are born sensitive and intelligent, and are able to observe, imitate, and predict others’ behavior, we often appear more socially capable than average. But that doesn’t mean we truly empathize. When we encounter situations that require a genuine emotional response, we can freeze—especially when it comes to something like love.
 
-<h1> title</h1>
+In the winter before the pandemic, I went with a group of my hippie friends from Taiwan to a hippie music festival in Chiang Mai, Thailand. Among us was a very beautiful girl, and as soon as we arrived, she quickly attracted a lot of attention from men. A French guy approached us, and while chatting and joking, he took out a small box filled with seashells. He said he had collected them from beaches all over the world and invited each of us to choose one as a souvenir.
 
-Please be careful!
+What he really wanted was to use these shells to express his affection for that girl. The rest of us were mostly there to awkwardly fill the space, but I couldn’t help admiring his way of courting someone. Over the next few days, whenever he saw me, he would ask where she was, how she was doing that day. I could clearly feel how strong his feelings for her were. Perhaps because I was too curious about what it feels like to love and to be loved, I found myself inexplicably moved, even though I knew those feelings were not meant for me.
+After that, I began to imitate him. I started collecting seashells from beaches around the world. I collected many of them, but I never gave a single one away. Mostly because I didn’t know who I should give them to. Even if there were someone, these shells wouldn’t truly represent my feelings—they would only be copied emotions. In the end, I stopped collecting altogether and threw all the shells away at once, keeping only the one the French boy had given me.
 
-## default
-
-Using MDC & Vue components is addictive.
-
-::alert{type="warning"}
-The **alert** component.
-::
-
-- [Attributes](#attributes){style="background-color: green;"},
-  `code`{style="color: cyan;"},
-
-- _italic_{style="background-color: yellow; color:black;"}
-  and **bold**{style="background-color: lightgreen;"}
-  texts.
-
-- 古希臘哲學家柏拉圖（PLATO）的著作《饗宴》（SYMPOSIUM），其中阿里斯托芬（ARISTOPHANES）講述了一個寓言性的故事，用來解釋人類為何會渴望愛與結合。
-  阿里斯托芬說，在最初的時代，人類並不像現在這樣是單一個體。 那時的人類分為三種：男男結合（太陽之子），女女結合（大地之女），男女結合（月亮之子）
-  每一個原始人都有四隻手、四條腿、兩張臉（背對背在一顆頭上），以及兩組生殖器。他們行動迅速、力量巨大，甚至企圖挑戰眾神。宙斯（ZEUS）為了削弱他們的力量，但又不想毀滅人類（因為那樣就沒有人獻祭了），於是想出一個辦法：
-  用雷把他們從中間劈開，讓他們變成兩個個體。被分開後，每個人都感到深深的失落與空虛，開始四處尋找失去的另一半。當他們再次遇到彼此時，便產生強烈的吸引與愛戀，渴望再度合而為一。這就是人類愛情的起源。\*
-
-在我二十一歲的那一年，我結過一次婚，跟一個過於漂亮與過聰明女孩。而這段婚姻中，我並沒愛上她，她也沒愛上我。當時，我們都很年輕，都嚮往愛情，但我們都愛上不該愛的人。因此，比起愛情的美好，我們更先感受到的多半是疼痛。
-
-那年，那女孩跟她家裡大吵一架，她想盡辦法要氣她的家人，她想透過跟我結婚把她家人氣瘋。她是美國籍的台灣人，當時她知道我要去美國半年，她問我，要不要跟她結婚，我們可以在台灣結一次婚，等我到美國後，她會飛過來，我們在拉斯維加斯再結一次，這樣到時候我就可以拿到綠卡，並擺脫台灣的生活。
-
-我媽從小就告訴我，婚姻只是一張紙，所以在我腦中並不覺得這是多大一回事。因此，我也就答應了她。我還不小心跟我媽說了，我媽很震驚，她叫我至少要買一個戒指給她，說是承諾。我賣掉我一些股票，還特別挑了一款Cartier的戒指給她。
-
-在我經驗裡婚姻不一定是幸福的象徵，俗話說「婚姻是愛情的墳墓」 ，兩個人再一起不一定變得更強壯，我看見許多人在婚姻裡死傷慘重，或許他們把結婚當作感情問題的解方；而這場沒意義婚姻正好相反，對我同而言卻是一種解脫。當我與其他人說我們結婚的同時，象徵我早已定下、有個伴，不在求偶的戰場裡面遍體鱗傷，也不必再面對，我在情場有多失敗的事實。
-
-理所當然，她最後並沒有飛來美國，我們也沒有在拉斯維加斯結婚，我也沒有拿到綠卡，但我最後並沒有喜歡上美國，所以也沒有遺憾。等我回台灣的時候，我們就很快就離婚了，也不再是朋友。後來我不常想起她，只不過時常拿起我藏在我錢包中的結婚照，跟我其他人說笑，說：「我沒有過愛情，但我有一段婚姻。」
-::
+At the end of the festival, the French boy invited us to travel with him through Thailand and onward to India, but we didn’t go with him. The beautiful girl also didn’t choose any of the many men who pursued her. Instead, she fell in love with another girl and moved to a different province in Thailand, where they lived together for several months. Even sincere love can eventually turn into nothing, as if it never began at all.

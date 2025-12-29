@@ -11,8 +11,7 @@ const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
 </script>
 
 <template>
-  <main class="prose mx-auto max-w-6xl px-6 py-10">
-   
+  <main class="mx-auto max-w-6xl px-6 py-10">
     <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
       <!-- 左：目錄 1/3 -->
       <aside class="lg:col-span-2">
@@ -47,19 +46,11 @@ const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
       <!-- 右：文章 2/3 -->
       <article class="lg:col-span-10">
         <ContentRenderer
+          v-if="Seashell"
           :value="Seashell"
-          class="prose max-w-none prose-h1:text-red-600 prose-h1:text-5xl prose-h2:text-blue-600 prose-h2:text-4xl prose-h3:text-green-600 prose-h3:text-3xl"
+          class="max-w-none prose prose-neutral [&_h1]:[font-family:var(--font-silkscreen)] [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2]:[font-family:var(--font-newsreader)] [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:[font-family:var(--font-newsreader)] [&_p]:text-gray-700 [&_p]:[font-family:var(--font-newsreader)]"
         />
       </article>
     </div>
   </main>
 </template>
-
-<style scoped>
-prose h1 {
-  color: green; /* Adjust based on your header height */
-}
-p {
-  color: blue;
-}
-</style>

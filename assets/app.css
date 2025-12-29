@@ -57,3 +57,8 @@ html {
 .animate-scroll {
   animation: scroll 20s linear infinite;
 }
+
+@theme {
+  --font-silkscreen: "silkscreen", monospace;
+  --font-newsreader: "newsreader", serif;
+}
