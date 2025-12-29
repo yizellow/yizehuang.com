@@ -3,6 +3,8 @@ title: A Seashell and a Copied Love
 date: 2023-12-01
 ---
 
+## A Seashell and a Copied Love
+
 When I was nineteen, I was diagnosed with Asperger’s syndrome.  
 It explained why, ever since I was young, I had always felt out of place among other people.
 
@@ -20,8 +22,6 @@ Because we are born sensitive and intelligent, able to observe, imitate, and pre
 
 When we encounter situations that require a genuine emotional response, we can freeze.  
 Especially when it comes to something like love.
-
----
 
 In the winter before the pandemic, I went with a group of my hippie friends from Taiwan to a hippie music festival in Chiang Mai, Thailand.
 
@@ -41,8 +41,6 @@ I could clearly feel how strong his feelings for her were.
 
 Perhaps because I was too curious about what it feels like to love and to be loved, I found myself inexplicably moved—  
 even though I knew those feelings were not meant for me.
-
----
 
 After that, I began to imitate him.  
 I started collecting seashells from beaches around the world. I collected many of them, but I never gave a single one away.

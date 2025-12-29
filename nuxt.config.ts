@@ -23,5 +23,23 @@ export default defineNuxtConfig({
     transpile: ["gsap"],
   },
 
-  modules: ["@nuxt/content"],
+  modules: ["@nuxt/content", "@nuxtjs/i18n"],
+  content: {
+    build: {
+      markdown: {
+        toc: {
+          depth: 3, // include h3 headings
+          searchDepth: 3,
+        },
+      },
+    },
+  },
+  i18n: {
+    locales: [
+      { code: "en", language: "en-US" },
+      { code: "zh", language: "zh-TW" },
+    ],
+    defaultLocale: "en",
+    strategy: "prefix_except_default",
+  },
 });

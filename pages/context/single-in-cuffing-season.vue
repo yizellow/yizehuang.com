@@ -1,19 +1,26 @@
 <script setup lang="ts">
+const switchLocalePath = useSwitchLocalePath();
+const { locale } = useI18n();
+
+const slug = "a-seashell-and-a-copied-love";
+
+const contentPath = computed(
+  () => `/${locale.value}/single-in-cuffing-season/${slug}`
+);
+
 const { data: Seashell } = await useAsyncData(
-  "a-seashell-and-a-copied-love",
-  () =>
-    queryCollection("content")
-      .path("/single-in-cuffing-season/en/a-seashell-and-a-copied-love")
-      .first()
+  () => `seashell-${locale.value}-${slug}`,
+  () => queryCollection("content").path(contentPath.value).first(),
+  { watch: [locale] }
 );
 
 const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
 </script>
-
 <template>
+  <LangFab />
+
   <main class="mx-auto max-w-6xl px-6 py-10">
     <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
-      <!-- 左：目錄 1/3 -->
       <aside class="lg:col-span-2">
         <div class="sticky top-24">
           <p class="mb-4 text-sm text-neutral-500">Contents</p>
@@ -27,15 +34,12 @@ const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
                 {{ item.text }}
               </a>
 
-              <!-- 子層 -->
               <ul
                 v-if="item.children"
                 class="mt-1 space-y-1 pl-4 text-xs text-neutral-500"
               >
                 <li v-for="child in item.children" :key="child.id">
-                  <a :href="`#${child.id}`">
-                    {{ child.text }}
-                  </a>
+                  <a :href="`#${child.id}`">{{ child.text }}</a>
                 </li>
               </ul>
             </li>
@@ -43,7 +47,6 @@ const toc = computed(() => Seashell.value?.body?.toc?.links ?? []);
         </div>
       </aside>
 
-      <!-- 右：文章 2/3 -->
       <article class="lg:col-span-10">
         <ContentRenderer
           v-if="Seashell"
