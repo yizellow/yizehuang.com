@@ -42,25 +42,27 @@ onMounted(() => {
       </p>
     </section>
     <NuxtLink to="/context/single-in-cuffing-season" class="block">
-      <section class="flex items-center gap-4 p-4 bg-amber-200/90">
+      <section
+        class="flex flex-col lg:flex-row items-center gap-4 p-4 bg-primary/80"
+      >
         <!-- 圖片 -->
-        <div class="w-16 h-20 flex-shrink-0 overflow-hidden rounded">
+        <div
+          class="w-50 h-30 md:w-80 md:h-60 lg:w-16 lg:h-20 flex-shrink-0 overflow-hidden rounded"
+        >
           <img
             src="https://cdna.artstation.com/p/assets/images/images/052/484/594/large/yize-huang-0019.jpg?1659929880"
             alt="cover"
-            class="w-full h-full object-cover hover:invert"
+            class="w-full h-full object-cover"
           />
         </div>
 
-        <!-- 文字區 -->
-        <div class="flex flex-col gap-1 w-full">
-          <p
-            class="silkscreen text-xs lg:text-base font-medium hover:underline"
-          >
+        <!-- 文字 -->
+        <div class="flex flex-col gap-1">
+          <p class="silkscreen text-xs lg:text-base font-medium">
             Single In Cuffing Season
           </p>
 
-          <div class="flex items-center gap-2">
+          <div class="flex gap-2 flex-col lg:flex-col">
             <p class="newsreader text-sm text-gray-700 whitespace-nowrap">
               last updated date:
             </p>
@@ -70,13 +72,12 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- 例外按鈕 -->
+        <!-- 按鈕 -->
         <a
           href="https://yizellow.itch.io/single-in-cuffing-season"
           target="_blank"
           rel="noopener noreferrer"
-          class="silkscreen bg-primary text-[10px] md:text-xs px-1 py-0.5 md:px-3 md:py-1 rounded-full hover:invert lg:whitespace-nowrap"
-          @click.stop
+          class="silkscreen bg-secondary/80 text-white text-[10px] md:text-xs px-3 py-1 rounded-full self-center lg:self-auto lg:ml-auto lg:whitespace-nowrap"
         >
           Virtual Exhibition
         </a>
