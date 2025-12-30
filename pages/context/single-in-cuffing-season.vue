@@ -5,6 +5,7 @@ const { locale } = useI18n();
  * 要在同一頁顯示的文章 slug（順序即顯示順序）
  */
 const slugs = [
+  "marriage-as-a-matter-of-course",
   "a-seashell-and-a-copied-love",
   "the-one-who-loves-me-and-the-one-i-love-are-not-the-same",
 ];
@@ -76,7 +77,7 @@ const toc = computed(
           v-for="a in articles"
           :key="a.path"
           :value="a"
-          class="max-w-none prose prose-neutral [&_h1]:[font-family:var(--font-silkscreen)] [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2_a]:font-bold [&_h2]:[font-family:var(--font-newsreader)] [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:[font-family:var(--font-newsreader)] [&_p]:text-gray-700 [&_p]:[font-family:var(--font-newsreader)]"
+          class="max-w-none prose prose-neutral [&_h1]:[font-family:var(--font-silkscreen)] [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2]:[font-family:var(--font-newsreader)] [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:[font-family:var(--font-newsreader)] [&_p]:text-gray-700 [&_p]:[font-family:var(--font-newsreader)]"
         />
       </article>
     </div>

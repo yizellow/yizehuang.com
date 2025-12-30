@@ -29,8 +29,11 @@ export default defineNuxtConfig({
       markdown: {
         toc: {
           depth: 3, // include h3 headings
-          searchDepth: 3,
+          searchDepth: 3, //目前沒用
         },
+        // remarkPlugins: {
+        //   "remark-mark-plus": {},
+        // },
       },
     },
   },

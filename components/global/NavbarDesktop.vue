@@ -126,7 +126,7 @@ const hoverLeave = (evt: MouseEvent) =>
   <div class="flex justify-center items-center">
     <div
       ref="frameRef"
-      class="navbar-frame flex flex-col justify-center items-center w-2/5 rounded-full opacity-0 p-2 mt-2 min-h-14 border-1 border-[var(--color-secondary)] shadow-md"
+      class="navbar-frame flex flex-col backdrop-blur-[1px] justify-center items-center w-2/5 rounded-full opacity-0 p-2 mt-2 min-h-14 border-1 border-[var(--color-secondary)] shadow-md"
       @mouseenter="onEnter"
       @mouseleave="onLeave"
     >
