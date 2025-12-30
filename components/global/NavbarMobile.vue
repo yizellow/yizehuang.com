@@ -155,7 +155,7 @@ router.afterEach(() => {
   <div class="topNav flex justify-center items-center flex-col opacity-0">
     <!-- 上方主選單（icon 區塊保持原樣） -->
     <nav
-      class="flex flex-row justify-between items-center w-4/5 px-6 mt-2 min-h-12 rounded-full border border-[var(--color-secondary)] shadow-md"
+      class="backdrop-blur-[0.8px] flex flex-row justify-between items-center w-4/5 px-6 mt-2 min-h-12 rounded-full border border-[var(--color-secondary)] shadow-md"
     >
       <div>
         <NuxtLink to="/">
@@ -186,7 +186,7 @@ router.afterEach(() => {
     <nav
       v-show="listShow"
       ref="navListRef"
-      class="nav-list flex flex-col justify-around items-center w-4/5 mt-2 rounded-2xl border border-[var(--color-secondary)] shadow-md overflow-hidden"
+      class="backdrop-blur-[1.5px] nav-list flex flex-col justify-around items-center w-4/5 mt-2 rounded-2xl border border-[var(--color-secondary)] shadow-md overflow-hidden"
     >
       <template v-for="(item, index) in menuItems" :key="item.label">
         <button
