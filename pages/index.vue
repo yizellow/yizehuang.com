@@ -119,7 +119,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="container" class="relative w-screen h-[280vh] bg-white">
+  <div ref="container" class="relative w-full h-[280vh] bg-white">
     <section class="sticky top-0 w-full h-screen">
       <video
         ref="video"
@@ -139,7 +139,7 @@ onBeforeUnmount(() => {
     </section>
   </div>
 
-  <section class="relative w-screen h-[100vh]">
+  <section class="relative w-full h-[100vh]">
     <Banner />
     <div class="w-full h-full">
       <client-only>
