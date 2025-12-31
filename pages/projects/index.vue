@@ -1,92 +1,54 @@
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import gsap from "gsap";
-
-const slides = [
-  {
-    img: "https://cdna.artstation.com/p/assets/images/images/082/633/124/large/yize-huang-2024-12-06-9-01-23.jpg?1733490357",
-    caption: "CHIPS",
-  },
-  {
-    img: "https://cdnb.artstation.com/p/assets/images/images/052/116/789/large/yize-huang-plastic-wrap-protection-laocoon-and-his-sons.jpg?1658985491",
-    caption: "3D modeling",
-  },
-  {
-    img: "https://cdnb.artstation.com/p/assets/images/images/082/626/611/large/yize-huang-j4.jpg?1733473161",
-    caption: "Yizellow",
-  },
-  {
-    img: "https://cdna.artstation.com/p/assets/images/images/082/332/470/large/yize-huang-2024-11-27-5-48-00.jpg?1732701058",
-    caption: "Travel and my film camera",
-  },
-  {
-    img: "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
-    caption: "Light Installation",
-  },
-];
+import { works } from "~/data/works";
+import TopBanner from "~/components/parts/TopBanner.vue";
 
 const container = ref(null);
 
-// 用於展示的列表，初始為 slides
-const displaySlides = ref([...slides]);
+// 用於展示的列表，初始為 works
+const displaySlides = ref([...works]);
 
-// Intersection Observer
 const observer = ref(null);
 const sentinel = ref(null);
 const card = ref(null);
 
 const loadMore = () => {
-  // 將原 slides append 到 displaySlides
-  displaySlides.value = [...displaySlides.value, ...slides];
+  // 將原 works append 到 displaySlides
+  displaySlides.value = [...displaySlides.value, ...works];
 };
 
 onMounted(() => {
-  gsap.fromTo(
-    card.value,
-
-    { ease: "power4.in", opacity: 0 },
-    { opacity: 100 }
-  );
+  gsap.fromTo(card.value, { ease: "power4.in", opacity: 0 }, { opacity: 1 });
 
   nextTick(() => {
     observer.value = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            loadMore();
-          }
-        });
+        entries.forEach((entry) => entry.isIntersecting && loadMore());
       },
       { root: null, rootMargin: "0px", threshold: 1.0 }
     );
 
-    if (sentinel.value) {
-      observer.value.observe(sentinel.value);
-    }
+    if (sentinel.value) observer.value.observe(sentinel.value);
   });
-  let scrollY = 0; // 真實滾動
-  let currentY = 0; // 實際移動值
-  const ease = 0.1; // 慣性強度，越小延遲越明顯
+
+  let scrollY = 0;
+  let currentY = 0;
+  const ease = 0.1;
 
   const update = () => {
-    // 緩動差值
     currentY += (scrollY - currentY) * ease;
-
-    // 應用到 container
-    gsap.set(container.value, {
-      y: -currentY,
-    });
-
+    gsap.set(container.value, { y: -currentY });
     requestAnimationFrame(update);
   };
-  window.addEventListener("scroll", () => {
-    scrollY = window.scrollY;
-  });
 
+  window.addEventListener("scroll", () => (scrollY = window.scrollY));
   update();
 });
 </script>
+
 <template>
+  <TopBanner />
   <main
     ref="container"
     class="w-screen h-auto flex justify-center items-start p-4"
@@ -94,27 +56,27 @@ onMounted(() => {
     <section
       class="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 sm:mb-5"
     >
-      <div
+      <NuxtLink
         v-for="(item, index) in displaySlides"
-        :key="index"
-        class="flex flex-col justify-center items-center overflow-hidden transition"
+        :key="item.slug + '-' + index"
+        :to="`/projects/${item.slug}`"
+        class="flex flex-col justify-center items-center overflow-hidden transition cursor-pointer"
       >
         <div class="relative w-full">
           <img
-            :src="item.img"
-            :alt="item.caption"
+            :src="item.cover"
+            :alt="item.title"
             class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
           />
         </div>
+
         <div
           class="flex justify-between items-center w-full px-1 pt-2 sm:text-base md:text-xs"
         >
-          <h3 class="newsreader text-secondary/70">
-            {{ item.caption }}
-          </h3>
-          <div class="text-primary silkscreen">2025</div>
+          <h3 class="newsreader text-secondary/70">{{ item.title }}</h3>
+          <div class="text-primary silkscreen">{{ item.year }}</div>
         </div>
-      </div>
+      </NuxtLink>
 
       <!-- Sentinel 用於觸發無限滾動 -->
       <div ref="sentinel" class="h-1 w-full"></div>
