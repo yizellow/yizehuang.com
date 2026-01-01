@@ -129,7 +129,19 @@ const nextImage = () => {
                 >
                   ←
                 </button>
-
+                <!-- dots 指示 -->
+                <div class="flex items-center gap-2">
+                  <span
+                    v-for="(_, i) in images"
+                    :key="i"
+                    class="w-2 h-2 rounded-full transition-all"
+                    :class="
+                      i === currentIndex
+                        ? 'bg-secondary scale-125'
+                        : 'bg-secondary/40'
+                    "
+                  />
+                </div>
                 <button
                   @click="nextImage"
                   class="bg-white text-secondary hover:invert w-12 h-12 flex items-center justify-center rounded-full"
@@ -141,14 +153,15 @@ const nextImage = () => {
           </div>
         </div>
       </section>
-      <hr class="border-0 border-t-2 border-dashed border-pro/80 my-6" />
       <!-- 4) 詳細作品介紹（放在下面） -->
       <section v-if="work!.desc" class="mt-6">
+        <hr class="border-0 border-t-2 border-dashed border-pro/80 my-6" />
+
         <h1 class="text-2xl silkscreen text-secondary text-center mb-4">
           Description
         </h1>
         <p
-          class="text-gray-900 border border-primary leading-relaxed min-h-[40vh] backdrop-blur-sm bg-white/85 p-6 rounded-2xl shadow-lg shadow-black/20 newsreader"
+          class="whitespace-pre-line text-gray-900 border border-primary leading-relaxed min-h-[40vh] backdrop-blur-sm bg-white/85 p-6 rounded-2xl shadow-lg shadow-black/20 newsreader"
         >
           {{ work!.desc }}
         </p>

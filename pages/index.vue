@@ -146,13 +146,13 @@ onBeforeUnmount(() => {
         <Gallery v-if="isDesktop" />
         <!-- <div class="w-full h-full" v-else></div> -->
         <div class="w-full h-1/4 justify-center items-center flex" v-else>
-          <div
-            class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2 rounded-4xl text-primary flex justify-center items-center mb-2 p-2 seemore"
-          >
-            <a href="/projects" class="text-md text-primary"
-              >see all projects......</a
+          <a href="/context" class="text-md text-primary">
+            <div
+              class="px-10 bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2 rounded-4xl text-primary flex justify-center items-center mb-2 p-2 seemore"
             >
-          </div>
+              MORE...
+            </div></a
+          >
         </div>
       </client-only>
       <section
