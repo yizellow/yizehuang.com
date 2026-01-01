@@ -11,6 +11,8 @@ import {
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Gallery from "~/components/parts/Gallery.vue";
+import { useRouter } from "#imports";
+const router = useRouter();
 
 import picUrl from "@/assets/images/pic.jpg";
 const exhibitions = [
@@ -125,7 +127,10 @@ onMounted(() => {
   controls.enableRotate = false; // 禁用旋轉
   controls.enableZoom = false; // 禁用縮放
   controls.enablePan = false; // 禁用平移
-
+  const onCssClick = (e) => {
+    console.log("clicked", e.target);
+  };
+  cssRenderer.domElement.addEventListener("click", onCssClick, true);
   /* 2. 透明立方體 + 邊框 ---------------------------------------- */
   const cube = new THREE.Mesh(
     new THREE.BoxGeometry(boxSize.x, boxSize.y, boxSize.z),
@@ -167,24 +172,45 @@ onMounted(() => {
   templateDiv.style.height = `${boxSize.y}px`;
 
   templateDiv.innerHTML = `
-    <main class="container bg-white/30 justify-center">
-      <div class="w-full h-[100px] "></div>
-      <section class="w-3/5 silkscreen text-[6px] mt-2  ">
-        ${itemsHtml}
-      </section>
-     <div class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2  rounded-4xl
- text-primary flex justify-center items-center mb-2 p-2 seemore">
+  <main class="container bg-white/30 justify-center">
+    <div class="w-full h-[100px] "></div>
+    <section class="w-3/5 silkscreen text-[6px] mt-2">
+      ${itemsHtml}
+    </section>
 
-<a href="/context" class="text-xs text-primary ">MORE...</a>
+    <div
+      data-link="/context"
+      role="button"
+      tabindex="0"
+      class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2 rounded-4xl
+             text-primary flex justify-center items-center mb-2 p-2 seemore cursor-pointer"
+    >
+      MORE...
+    </div>
+  </main>
+`;
 
-     
-     
-     
-      </div>
+  cssRenderer.domElement.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
 
-    </main>
-  `;
+    const btn = target.closest("[data-link]");
+    if (!btn) return;
 
+    const to = btn.getAttribute("data-link");
+    if (!to) return;
+
+    e.preventDefault();
+    router.push(to);
+  });
+  templateDiv.style.pointerEvents = "auto";
+  templateDiv.style.cursor = "auto";
+
+  // 讓按鈕一定能吃到事件
+  templateDiv.querySelectorAll("button,[data-link]").forEach((el) => {
+    el.style.pointerEvents = "auto";
+    el.style.cursor = "pointer";
+  });
   /* 4. 四個面 ---------------------------------------------------- */
   const panels = [];
 
