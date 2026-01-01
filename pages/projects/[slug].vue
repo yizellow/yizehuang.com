@@ -74,80 +74,102 @@ const nextImage = () => {
     <!-- 這一層做成卡片感（可選） -->
 
     <div
-      class="bg-white rounded-t-3xl shadow-2xl px-6 py-12"
-      :class="videoSrc ? ' border-t-2 border-primary ' : 'mt-10'"
+      class="rounded-t-3xl shadow-2xl px-6 py-12 backdrop-blur-sm max-w-8xl mx-auto"
+      :class="videoSrc ? ' border-t-4 border-primary ' : 'mt-10'"
     >
-      <!-- 2) 圖片 -->
+      <!-- 2+3) 圖片(3/4) + 基本資訊(1/4) -->
       <section class="mb-10">
-        <h1 class="text-4xl silkscreen mb-2 px-3">{{ work!.title }}</h1>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:items-stretch">
+          <!-- 右：文字（桌機等高） -->
+          <aside class="lg:col-span-1 order-1 lg:order-2 flex">
+            <div
+              class="bg-primary/90 shadow-lg shadow-black/10 backdrop-blur-md hover:invert rounded-2xl flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-center gap-2 w-full h-full py-3 px-3"
+            >
+              <h1 class="text-4xl text-secondary/80 silkscreen">
+                {{ work!.title }}
+              </h1>
 
-        <!-- 圖片 -->
-        <div
-          class="relative w-full h-[50vh] bg-black/5 overflow-hidden rounded-2xl"
-        >
-          <img
-            v-if="images.length"
-            :src="images[currentIndex]"
-            :alt="work!.title"
-            class="absolute inset-0 w-full h-full object-contain"
-          />
-        </div>
+              <div class="silkscreen text-white">
+                {{ work!.year }}
+              </div>
 
-        <!-- 箭頭控制列（圖片下方） -->
-        <div
-          v-if="images.length > 1"
-          class="silkscreen mt-1 md:mt-4 flex items-center justify-center px-4"
-        >
-          <button
-            @click="prevImage"
-            class="silkscreen bg-white text-secondary hover:invert w-15 h-12 flex items-center justify-center rounded-full"
-          >
-            ←
-          </button>
+              <div
+                v-if="work!.medium"
+                class="text-gray-900/80 text-sm silkscreen"
+              >
+                {{ work!.medium }}
+              </div>
+            </div>
+          </aside>
 
-          <button
-            @click="nextImage"
-            class="bg-white text-secondary hover:invert w-15 h-12 flex items-center justify-center rounded-full"
-          >
-            →
-          </button>
+          <!-- 左：圖片（桌機等高） -->
+          <div class="lg:col-span-3 order-2 lg:order-1 flex">
+            <!-- column 容器 -->
+            <div class="flex flex-col w-full h-full">
+              <!-- 圖片 -->
+              <div
+                class="relative w-full h-[50vh] bg-black/5 overflow-hidden rounded-2xl"
+              >
+                <img
+                  v-if="images.length"
+                  :src="images[currentIndex]"
+                  :alt="work!.title"
+                  class="absolute inset-0 w-full h-full object-contain"
+                />
+              </div>
+
+              <!-- 箭頭（固定在圖片下方，不疊） -->
+              <div
+                v-if="images.length > 1"
+                class="silkscreen mt-2 flex items-center justify-center gap-4"
+              >
+                <button
+                  @click="prevImage"
+                  class="bg-white text-secondary hover:invert w-12 h-12 flex items-center justify-center rounded-full"
+                >
+                  ←
+                </button>
+
+                <button
+                  @click="nextImage"
+                  class="bg-white text-secondary hover:invert w-12 h-12 flex items-center justify-center rounded-full"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-
-      <!-- 3) 文字 -->
-      <section class="w-full min-h-[40vh]">
-        <div class="flex items-end justify-between gap-4">
-          <div class="silkscreen text-primary">{{ work!.year }}</div>
-        </div>
-
-        <div v-if="work!.medium" class="mt-3 text-secondary/70">
-          {{ work!.medium }}
-        </div>
-
-        <p v-if="work!.desc" class="mt-5 text-secondary/70 leading-relaxed">
+      <hr class="border-0 border-t-2 border-dashed border-pro/80 my-6" />
+      <!-- 4) 詳細作品介紹（放在下面） -->
+      <section v-if="work!.desc" class="mt-6">
+        <h1 class="text-2xl silkscreen text-secondary text-center mb-4">
+          Description
+        </h1>
+        <p
+          class="text-gray-900 border border-primary leading-relaxed min-h-[40vh] backdrop-blur-sm bg-white/85 p-6 rounded-2xl shadow-lg shadow-black/20 newsreader"
+        >
           {{ work!.desc }}
         </p>
       </section>
 
       <!-- clips 區塊照你原本的放這裡 -->
-      <section
-        v-if="work!.clips?.length"
-        class="mt-10 p-3 rounded-2xl bg-primary/90 shadow-lg shadow-secondary/80"
-      >
+      <section v-if="work!.clips?.length" class="mt-10 p-3 rounded-2xl">
         <h2
-          class="silkscreen text-primary mb-4 bg-secondary rounded-lg text-center border"
+          class="silkscreen text-primary mb-4 bg-secondary/75 rounded-lg text-center"
         >
           Video Clips
         </h2>
         <div class="relative">
           <div ref="clipWrap" class="overflow-x-auto">
-            <div class="flex gap-4 w-max bg-secondary p-2 rounded-2xl">
+            <div class="flex gap-4 w-max p-2 rounded-2xl">
               <a
                 v-for="(c, i) in work!.clips"
                 :key="c.url + i"
                 :href="c.url"
                 target="_blank"
-                class="block w-56 flex-none rounded-2xl border border-primary/80 p-3"
+                class="block w-56 flex-none rounded-2xl"
               >
                 <div class="aspect-video w-full overflow-hidde">
                   <img
@@ -156,7 +178,7 @@ const nextImage = () => {
                   />
                 </div>
                 <div
-                  class="text-sm text-secondary newsreader text-center bg-white rounded-b-md p-1"
+                  class="text-sm text-secondary/80 newsreader text-center bg-primary rounded-b-md p-1"
                 >
                   {{ c.title ?? "Video" }}
                 </div>
