@@ -175,7 +175,7 @@ onMounted(() => {
      <div class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2  rounded-4xl
  text-primary flex justify-center items-center mb-2 p-2 seemore">
 
-<a href="/projects" class="text-xs text-primary ">see all projects......</a>
+<a href="/context" class="text-xs text-primary ">MORE...</a>
 
      
      

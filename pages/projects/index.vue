@@ -51,7 +51,7 @@ onMounted(() => {
   <TopBanner />
   <main
     ref="container"
-    class="w-screen h-auto flex justify-center items-start p-4"
+    class="w-full h-auto flex justify-center items-start p-4"
   >
     <section
       class="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 sm:mb-5"
