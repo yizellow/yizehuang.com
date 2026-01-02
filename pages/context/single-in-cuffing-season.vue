@@ -1,40 +1,49 @@
 <script setup lang="ts">
+type TocItem = {
+  id: string;
+  text: string;
+  children?: TocItem[];
+};
+
+type Article = {
+  path: string;
+  title?: string;
+  body?: { toc?: { links?: TocItem[] } };
+};
+
 const { locale } = useI18n();
 
-/**
- * 要在同一頁顯示的文章 slug（順序即顯示順序）
- */
-const slugs = [
-  "marriage-as-a-matter-of-course",
-  "a-seashell-and-a-copied-love",
-  "the-one-who-loves-me-and-the-one-i-love-are-not-the-same",
-];
-
-/**
- * content 實際 path 前綴
- * 必須對應 content/en/... 與 content/zh/...
- */
+/** content 實際 path 前綴 */
 const base = computed(() => `/${locale.value}/single-in-cuffing-season`);
 
-/**
- * 組出完整 content paths
- */
-const paths = computed(() => slugs.map((s) => `${base.value}/${s}`));
+/** 文章順序 */
+const articleList = [
+  { slug: "marriage-as-a-matter-of-course" },
+  { slug: "the-one-who-loves-me-and-the-one-i-love-are-not-the-same" },
+  { slug: "a-seashell-and-a-copied-love" },
+] as const;
 
-/**
- * 一次抓多篇文章（Nuxt Content v3 正確寫法）
- */
-const { data: articles } = await useAsyncData(
+const slugs = computed(() => articleList.map((a) => a.slug));
+const paths = computed(() => slugs.value.map((s) => `${base.value}/${s}`));
+
+/** 抓文章 */
+const { data: articles } = await useAsyncData<Article[]>(
   () => `cuffing-exhibit-${locale.value}`,
   () => queryCollection("content").where("path", "IN", paths.value).all(),
   { watch: [locale] }
 );
 
-/**
- * 合併所有文章的 TOC（共用目錄）
- */
-const toc = computed(
-  () => articles.value?.flatMap((a) => a.body?.toc?.links ?? []) ?? []
+/** 依 articleList 排回來 */
+const orderedArticles = computed<Article[]>(() => {
+  const map = new Map((articles.value ?? []).map((a) => [a.path, a]));
+  return paths.value
+    .map((p) => map.get(p))
+    .filter((a): a is Article => Boolean(a));
+});
+
+/** TOC 只顯示 h2/h3 */
+const toc = computed<TocItem[]>(() =>
+  orderedArticles.value.flatMap((a) => a.body?.toc?.links ?? [])
 );
 </script>
 
@@ -73,12 +82,12 @@ const toc = computed(
 
       <!-- 右：多篇文章 -->
       <article class="lg:col-span-10 space-y-24">
-        <ContentRenderer
-          v-for="a in articles"
-          :key="a.path"
-          :value="a"
-          class="max-w-none prose prose-neutral [&_h1]:[font-family:var(--font-silkscreen)] [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2]:[font-family:var(--font-newsreader)] [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:[font-family:var(--font-newsreader)] [&_p]:text-gray-700 [&_p]:[font-family:var(--font-newsreader)]"
-        />
+        <section v-for="a in orderedArticles" :key="a.path">
+          <ContentRenderer
+            :value="a"
+            class="max-w-none prose prose-neutral [&_h1]:font-silkscreen [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2]:font-newsreader [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:font-newsreader [&_p]:text-gray-700 [&_p]:font-newsreader"
+          />
+        </section>
       </article>
     </div>
   </main>

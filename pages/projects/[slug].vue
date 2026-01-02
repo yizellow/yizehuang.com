@@ -85,9 +85,9 @@ const nextImage = () => {
             <div
               class="bg-primary/90 shadow-lg shadow-black/10 backdrop-blur-md hover:invert rounded-2xl flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-center gap-2 w-full h-full py-3 px-3"
             >
-              <h1 class="text-4xl text-secondary/80 silkscreen">
+              <p class="text-lg lg:text-2xl text-secondary/80 silkscreen">
                 {{ work!.title }}
-              </h1>
+              </p>
 
               <div class="silkscreen text-white">
                 {{ work!.year }}

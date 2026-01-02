@@ -12,6 +12,32 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Gallery from "~/components/parts/Gallery.vue";
 import { useRouter } from "#imports";
+import { works } from "~/data/works";
+const displaySlides = computed(() =>
+  works
+    .filter((w) => featuredSlugs.includes(w.slug))
+    .map((w) => ({
+      slug: w.slug,
+      title: w.title,
+      year: w.year,
+      cover: w.cover,
+    }))
+);
+const featuredSlugs = [
+  "chips",
+  "yizellow",
+  "me-2019",
+  "plastic_wrap_protection_Laocoon_and_his_sons",
+  "film_camera_before_2025",
+  "the_men_with_a_flower",
+];
+const slides = computed(() =>
+  displaySlides.value.map((item) => ({
+    img: item.cover,
+    caption: item.title,
+    slug: item.slug,
+  }))
+);
 const router = useRouter();
 
 import picUrl from "@/assets/images/pic.jpg";
@@ -75,36 +101,6 @@ onMounted(() => {
   const container = containerRef.value;
   const W = container.clientWidth;
   const H = container.clientHeight;
-  const slides = [
-    {
-      img: "https://cdna.artstation.com/p/assets/images/images/082/633/124/large/yize-huang-2024-12-06-9-01-23.jpg?1733490357",
-      caption: "CHIPS",
-    },
-    {
-      img: "https://cdnb.artstation.com/p/assets/images/images/052/116/789/large/yize-huang-plastic-wrap-protection-laocoon-and-his-sons.jpg?1658985491",
-      caption: "3D modeling",
-    },
-    {
-      img: "https://cdnb.artstation.com/p/assets/images/images/082/626/611/large/yize-huang-j4.jpg?1733473161",
-      caption: "Yizellow",
-    },
-
-    {
-      img: "https://cdna.artstation.com/p/assets/images/images/082/332/470/large/yize-huang-2024-11-27-5-48-00.jpg?1732701058",
-      caption: "Travel and my film camera",
-    },
-    // {
-    //   img: "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
-    //   caption: "photo 5",
-    // },
-    {
-      img: "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
-      caption: "Light Installion",
-    },
-    // { img: picUrl, caption: "photo 7" },
-
-    // 想要幾筆就加幾筆
-  ];
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(W, H);
@@ -154,14 +150,15 @@ onMounted(() => {
   edges.scale.set(1.001, 1.001, 1.001);
   scene.add(edges);
 
-  const itemsHtml = slides
+  const itemsHtml = slides.value
     .map(
-      ({ img, caption }) => `
-      <div class="container  p-2 m-2  bg-white/80">
-        <div class="pic "><img src="${img}" /></div>
-        <p class="opacity-90 ">${caption}</p>
-      </div>
-    `
+      ({ img, caption, slug }) => `
+    <div class="container p-2 m-2 bg-white/80"
+         data-link="/projects/${slug}">
+      <div class="pic"><img src="${img}" /></div>
+      <p class="opacity-90">${caption}</p>
+    </div>
+  `
     )
     .join("");
 

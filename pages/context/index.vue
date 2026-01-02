@@ -43,11 +43,11 @@ onMounted(() => {
     </section>
     <NuxtLink to="/context/single-in-cuffing-season" class="block">
       <section
-        class="flex flex-col lg:flex-row items-center gap-4 p-4 bg-primary/80"
+        class="flex flex-col lg:flex-row items-center gap-4 p-4 border-b-2 border-primary"
       >
         <!-- 圖片 -->
         <div
-          class="w-50 h-30 md:w-80 md:h-60 lg:w-16 lg:h-20 flex-shrink-0 overflow-hidden rounded"
+          class="w-50 h-30 md:w-80 md:h-60 lg:w-16 lg:h-20 shrink-0 overflow-hidden rounded hover:invert"
         >
           <img
             src="https://cdna.artstation.com/p/assets/images/images/052/484/594/large/yize-huang-0019.jpg?1659929880"
@@ -58,7 +58,7 @@ onMounted(() => {
 
         <!-- 文字 -->
         <div class="flex flex-col gap-1">
-          <p class="silkscreen text-xs lg:text-base font-medium">
+          <p class="silkscreen text-xs lg:text-base font-medium hover:invert">
             Single In Cuffing Season
           </p>
 
@@ -77,7 +77,7 @@ onMounted(() => {
           href="https://yizellow.itch.io/single-in-cuffing-season"
           target="_blank"
           rel="noopener noreferrer"
-          class="silkscreen bg-secondary/80 text-white text-[10px] md:text-xs px-3 py-1 rounded-full self-center lg:self-auto lg:ml-auto lg:whitespace-nowrap"
+          class="silkscreen hover:invert bg-secondary/80 text-white text-[10px] md:text-xs px-3 py-1 rounded-full self-center lg:self-auto lg:ml-auto lg:whitespace-nowrap"
         >
           Virtual Exhibition
         </a>
