@@ -217,7 +217,24 @@ During the process of creating many doodles, I began to think about how artists 
       "https://cdna.artstation.com/p/assets/images/images/052/282/404/large/yize-huang-sde.jpg?1659416576",
     ],
   },
-
+  {
+    slug: "a_karaoke_machine_themed_around_taiwanese_romance",
+    title: "A karaoke machine themed around Taiwanese romance",
+    video: "https://www.youtube.com/embed/0X4zjlFPPtc", // 沒有就刪掉這行
+    medium: "Light Installation",
+    year: "2022",
+    cover:
+      "https://cdna.artstation.com/p/assets/images/images/082/499/478/medium/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
+    desc: `
+  This experimental piece, based on Arduino, is themed around "Taiwanese Romance." It is an outdoor installation designed to resemble a shower room. When audiences step into the installation and pick up the showerhead, it triggers a mechanism that transforms the space into a karaoke mode, inviting audiences to sing along and immerse themselves in the vibe of "Taiwanese Romance." `,
+    images: [
+      "https://cdnb.artstation.com/p/assets/images/images/095/020/235/medium/yize-huang-1.webp?1767370578",
+      "https://cdna.artstation.com/p/assets/images/images/082/499/478/medium/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
+      "https://cdnb.artstation.com/p/assets/images/images/095/020/241/medium/yize-huang-3.webp?1767370597",
+      "https://cdnb.artstation.com/p/assets/images/images/095/020/239/medium/yize-huang-5.webp?1767370586",
+      "https://cdna.artstation.com/p/assets/images/images/095/020/244/medium/yize-huang-2.webp?1767370601",
+    ],
+  },
   {
     slug: "design_your_room",
     title: "Design your room",
@@ -251,18 +268,6 @@ During the process of creating many doodles, I began to think about how artists 
     layout: "single",
   },
   {
-    slug: "light-installation",
-    title: "Light Installation",
-    year: "2025",
-    cover:
-      "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
-    desc: "",
-    images: [
-      "https://cdna.artstation.com/p/assets/images/images/082/499/478/large/yize-huang-2024-12-03-12-39-17.jpg?1733157609",
-    ],
-    layout: "single",
-  },
-  {
     slug: "zora",
     title: "Zora",
     year: "2019",
@@ -286,6 +291,8 @@ During the process of creating many doodles, I began to think about how artists 
     images: [
       "https://cdna.artstation.com/p/assets/images/images/082/626/602/large/yize-huang-pp2.jpg?1733473140",
       "https://cdnb.artstation.com/p/assets/images/images/082/626/605/large/yize-huang-pp1.jpg?1733473149",
+      "https://cdna.artstation.com/p/assets/images/images/095/020/560/medium/yize-huang-1.webp?1767371386",
+      "https://cdna.artstation.com/p/assets/images/images/095/020/558/medium/yize-huang-.webp?1767371379",
       "https://cdna.artstation.com/p/assets/images/images/082/626/586/large/yize-huang-pp3.jpg?1733473101",
     ],
     medium: "oil painting on canvas",
@@ -311,7 +318,7 @@ During the process of creating many doodles, I began to think about how artists 
     year: "2019-2024",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/095/016/998/medium/yize-huang-2026-01-02-14-52-00.webp?1767362073",
-    desc: 'The "Fundamentals of form" of this project were favored by many people, and they even wanted to make these pictures into tattoos, so I started working as a tattooist. But as more and more people liked it, I gradually professionalized the technique and even apprenticed at a studio in Sydney, Australia. However, with a lot of practice, I came to realize that tattooing was not the right direction for me, and I felt a lack of freedom in it, so I decided to give it up, even though being a tattooist could be very lucrative.',
+    desc: 'The "Yizellow" of this project were favored by many people, and they even wanted to make these pictures into tattoos, so I started working as a tattooist. But as more and more people liked it, I gradually professionalized the technique and even apprenticed at a studio in Sydney, Australia. However, with a lot of practice, I came to realize that tattooing was not the right direction for me, and I felt a lack of freedom in it, so I decided to give it up, even though being a tattooist could be very lucrative.',
     images: [
       "https://cdna.artstation.com/p/assets/images/images/095/016/998/medium/yize-huang-2026-01-02-14-52-00.webp?1767362073",
       "https://cdnb.artstation.com/p/assets/images/images/095/017/009/medium/yize-huang-2026-01-02-14-52-28.webp?1767362090",

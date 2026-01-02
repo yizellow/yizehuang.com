@@ -1,43 +1,39 @@
 <script setup lang="ts">
+type TocItem = {
+  id: string;
+  text: string;
+  children?: TocItem[];
+};
+
 type Article = {
   path: string;
   title?: string;
-  body?: { toc?: { links?: any[] } };
+  body?: { toc?: { links?: TocItem[] } };
 };
+
 const { locale } = useI18n();
-const { data: articles } = await useAsyncData<Article[]>(
-  () => `cuffing-exhibit-${locale.value}`,
-  () => queryCollection("content").where("path", "IN", paths.value).all(),
-  { watch: [locale] }
-);
-/**
- * 要在同一頁顯示的文章 slug（順序即顯示順序）
- */
+
+/** content 實際 path 前綴 */
+const base = computed(() => `/${locale.value}/single-in-cuffing-season`);
+
+/** 文章順序 */
 const articleList = [
-  {
-    slug: "marriage-as-a-matter-of-course",
-  },
-  {
-    slug: "the-one-who-loves-me-and-the-one-i-love-are-not-the-same",
-  },
-  {
-    slug: "a-seashell-and-a-copied-love",
-  },
+  { slug: "marriage-as-a-matter-of-course" },
+  { slug: "the-one-who-loves-me-and-the-one-i-love-are-not-the-same" },
+  { slug: "a-seashell-and-a-copied-love" },
 ] as const;
 
 const slugs = computed(() => articleList.map((a) => a.slug));
 const paths = computed(() => slugs.value.map((s) => `${base.value}/${s}`));
 
-/**
- * content 實際 path 前綴
- * 必須對應 content/en/... 與 content/zh/...
- */
-const base = computed(() => `/${locale.value}/single-in-cuffing-season`);
+/** 抓文章 */
+const { data: articles } = await useAsyncData<Article[]>(
+  () => `cuffing-exhibit-${locale.value}`,
+  () => queryCollection("content").where("path", "IN", paths.value).all(),
+  { watch: [locale] }
+);
 
-/**
-
- * 一次抓多篇文章（Nuxt Content v3 正確寫法）
- */
+/** 依 articleList 排回來 */
 const orderedArticles = computed<Article[]>(() => {
   const map = new Map((articles.value ?? []).map((a) => [a.path, a]));
   return paths.value
@@ -45,10 +41,8 @@ const orderedArticles = computed<Article[]>(() => {
     .filter((a): a is Article => Boolean(a));
 });
 
-/**
- * 合併所有文章的 TOC（共用目錄）
- */
-const toc = computed(() =>
+/** TOC 只顯示 h2/h3 */
+const toc = computed<TocItem[]>(() =>
   orderedArticles.value.flatMap((a) => a.body?.toc?.links ?? [])
 );
 </script>
@@ -89,7 +83,6 @@ const toc = computed(() =>
       <!-- 右：多篇文章 -->
       <article class="lg:col-span-10 space-y-24">
         <section v-for="a in orderedArticles" :key="a.path">
-          <div :id="`doc-${a.path.split('/').pop()}`" class="scroll-mt-28" />
           <ContentRenderer
             :value="a"
             class="max-w-none prose prose-neutral [&_h1]:font-silkscreen [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2]:font-newsreader [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:font-newsreader [&_p]:text-gray-700 [&_p]:font-newsreader"
