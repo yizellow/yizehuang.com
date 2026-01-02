@@ -1,3 +1,12 @@
+1. 心智圖的按鈕要裝上
+2. 作品圖片展示要放大的按鈕
+   經歷與圖片的介紹要做字體動畫
+   文章順序排版要條
+   主頁展示做品要點連結
+   see all project 要連到賣落頁面
+
+---
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
