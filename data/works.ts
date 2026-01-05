@@ -337,4 +337,23 @@ During the process of creating many doodles, I began to think about how artists 
 
     layout: "single",
   },
+  {
+    slug: "copied_love",
+    title: "Copied Love",
+    year: "2015",
+    cover:
+      "https://cdna.artstation.com/p/assets/images/images/095/095/248/large/yize-huang-55.webp?1767620708",
+    desc: "This work responds to “A Seashell and a Copied Love” in Singe in Cuffing Season.One piece is a natural seashell. The other three are copies made from different materials: aqua, polyurethane, and epoxy.Some of these copies look very similar to a real seashell, and some even look more real than the natural one. However, they are only copies.",
+    images: [
+      "https://cdna.artstation.com/p/assets/images/images/095/095/248/large/yize-huang-55.webp?1767620708",
+      "https://cdna.artstation.com/p/assets/images/images/095/095/242/medium/yize-huang-33.webp?1767620699",
+      "https://cdna.artstation.com/p/assets/images/images/095/095/240/medium/yize-huang-22.webp?1767620694",
+      "https://cdnb.artstation.com/p/assets/images/images/095/095/237/medium/yize-huang-11.webp?1767620690",
+      "https://cdnb.artstation.com/p/assets/images/images/095/095/245/medium/yize-huang-44.webp?1767620703",
+      "https://cdna.artstation.com/p/assets/images/images/095/095/256/medium/yize-huang-66.webp?1767620712",
+    ],
+    medium: "natural seashell, aqua, polyurethane, and epoxy.",
+
+    layout: "single",
+  },
 ];
