@@ -37,8 +37,7 @@ onMounted(() => {
       >
         Each theme is composed of textual narratives, artworks, and a virtual
         exhibition, and will be continuously updated and revised; all updates
-        are shown in the last updated date. The virtual exhibition is accessible
-        on desktop devices only and does not support mobile devices.
+        are shown in the last updated date.
       </p>
     </section>
     <NuxtLink to="/context/single-in-cuffing-season" class="block">
@@ -67,7 +66,7 @@ onMounted(() => {
               last updated date:
             </p>
             <p class="newsreader text-xs text-gray-700 whitespace-nowrap">
-              Dec 20, 2025
+              JAN 06, 2026
             </p>
           </div>
         </div>
