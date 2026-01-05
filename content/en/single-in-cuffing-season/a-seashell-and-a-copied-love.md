@@ -8,4 +8,4 @@ After that, I imitated him and began collecting seashells from beaches around th
 
 At the end of the festival, the French boy invited us to travel with him through Thailand to India, but we did not go. The beautiful girl also did not choose any of the many men; instead, she fell in love with another girl and lived for several months in another province of Thailand. Even a sincere love can eventually turn into nothing, as if it never began.
 
-<WorkEmbed slug="copied_love" intro="The other three are copies made from different materials: aqua, polyurethane, and epoxy.Some of these copies look very similar to a real seashell, and some even look more real than the natural one. However, they are only copies."></WorkEmbed>
+<WorkEmbed slug="copied_love" intro="Among these four seashells, one is a real natural seashell, while the others are copies made from different materials: aqua, polyurethane, and epoxy. Some of these copies look very similar to a real seashell, and some even appear more realistic than the natural one. However, they are ultimately just copies."></WorkEmbed>
