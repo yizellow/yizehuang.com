@@ -21,11 +21,12 @@
 
 ::
 
-<div class="flex justify-center text-center items-center flex-col ">
+<FigureBlock
+  src="/images/content/mene1.png"
+  alt="meme1"
+  caption="部分的人，即使身處一段關係之中，仍然會優先考量自己。"
+  :underline="true"></FigureBlock>
 
-![my image](/images/content/gym.png){style="display:block; margin:0 auto; max-width:60%; height:auto;"}
-
-<p class="underline">我請ＡＩ針對我在健身房遇到的人去描繪這些人</p>
 </div>
 
 ::footnote

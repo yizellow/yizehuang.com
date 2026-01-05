@@ -84,7 +84,10 @@ const nextImage = () => {
     >
       <!-- 2+3) 圖片(3/4) + 基本資訊(1/4) -->
       <section class="mb-10">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:items-stretch">
+        <div
+          @click="openLightbox"
+          class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:items-stretch"
+        >
           <!-- 右：文字（桌機等高） -->
           <aside class="lg:col-span-1 order-1 lg:order-2 flex">
             <div

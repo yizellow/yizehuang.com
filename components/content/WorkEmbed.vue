@@ -32,7 +32,7 @@ const cover = computed(() => w.value?.cover || w.value?.images?.[0] || "");
 
       <!-- 右：文 60% -->
       <div
-        class="md:basis-3/5 md:flex-none px-4 md:p-3 flex flex-col gap-3 md:justify-center"
+        class="md:basis-3/5 md:flex-none px-2 md:p-3 flex flex-col gap-3 md:justify-center"
       >
         <h3 class="silkscreen text-secondary text-lg lg:text-xl">
           {{ w.title }}

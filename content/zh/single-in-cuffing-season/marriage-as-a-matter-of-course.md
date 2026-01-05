@@ -19,12 +19,11 @@
 
 理所當然，她最後並沒有飛來美國，我們也沒有在拉斯維加斯結婚，我也沒有拿到綠卡，但我最後並沒有喜歡上美國，所以也沒有遺憾。等我回台灣的時候，我們就很快就離婚了，也不再是朋友。後來我不常想起她，只不過時常拿起我藏在我錢包中的結婚照，跟我其他人說笑，說：「我沒有過愛情，但我有一段婚姻。」
 
-<div class="flex justify-center text-center items-center flex-col ">
-
-![my image](/images/content/wedding.png){style="display:block; margin:0 auto; max-width:60%; height:auto;"}
-
-<p class="underline">我們公證結婚那天拍得一張照片</p>
-</div>
+<FigureBlock
+  src="/images/content/wedding.png"
+  alt="wedding"
+  caption="我們公證結婚那天拍得一張照片"
+  :underline="true"></FigureBlock>
 
 ::footnote
 `[1]`「﹝189D~19其次，先生們，最初的人是球形的，有著圓圓的背和兩側，有四條胳膊和四條腿，有兩張一模一樣的臉孔，圓圓的脖子上頂著一個圓圓的頭，兩張臉分別朝著前後不同的方向，還有四個耳朵，一對生殖器，其他身體各組成部分的數目也都加倍。他們直著身子行走，就像我們現在一樣，但可以任意向前或向後行走，等到要快跑的時候，他們就像車輪一樣向前翻滾。如果把手也算在內，他們實際上有八條腿，可想而知，他們能滾得非常快。」

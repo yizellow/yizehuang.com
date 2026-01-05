@@ -19,12 +19,11 @@ In my experience, marriage is not necessarily a symbol of happiness. There is a 
 
 Naturally, she never flew to the United States. We never married in Las Vegas, and I never got a green card. In the end, I did not come to like America either, so I felt no regret. When I returned to Taiwan, we divorced quickly and stopped being friends. I rarely think of her now. But I often take out the wedding photo I keep in my wallet and joke with others, saying, “I never had love, but I did have a marriage.
 
-<div class="flex justify-center text-center items-center flex-col ">
-
-![my image](/images/content/wedding.png){style="display:block; margin:0 auto; max-width:60%; height:auto;"}
-
-<p class="underline">A photo from the day we officially registered our marriage.</p>
-</div>
+<FigureBlock
+src="/images/content/wedding.png"
+alt="wedding"
+caption="A photo from the day we officially registered our marriage."
+:underline="true"> </FigureBlock>
 
 ::footnote
 
