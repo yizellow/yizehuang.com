@@ -77,6 +77,7 @@ onMounted(() => {
           href="https://yizellow.itch.io/single-in-cuffing-season"
           target="_blank"
           rel="noopener noreferrer"
+          @click.stop
           class="silkscreen hover:invert bg-secondary/80 text-white text-[10px] md:text-xs px-3 py-1 rounded-full self-center lg:self-auto lg:ml-auto lg:whitespace-nowrap"
         >
           Virtual Exhibition

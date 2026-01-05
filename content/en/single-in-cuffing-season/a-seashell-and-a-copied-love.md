@@ -7,3 +7,5 @@ In the winter before the COVID-19 pandemic, I went with a group of my hippie fri
 After that, I imitated him and began collecting seashells from beaches around the world. I collected many, but never gave a single one away. I didn’t know who to give them to. Even if there were someone, these shells could not represent my true feelings; they were only copied emotions. Eventually, I stopped collecting them and threw them all away at once, keeping only the one the French boy had given me.
 
 At the end of the festival, the French boy invited us to travel with him through Thailand to India, but we did not go. The beautiful girl also did not choose any of the many men; instead, she fell in love with another girl and lived for several months in another province of Thailand. Even a sincere love can eventually turn into nothing, as if it never began.
+
+<WorkEmbed slug="copied_love" intro="The other three are copies made from different materials: aqua, polyurethane, and epoxy.Some of these copies look very similar to a real seashell, and some even look more real than the natural one. However, they are only copies."></WorkEmbed>

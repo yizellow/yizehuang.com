@@ -6,7 +6,12 @@ definePageMeta({
 import { computed } from "vue";
 import { useRoute, createError } from "#imports";
 import { works } from "~/data/works";
+import GalleryLightbox from "~/components/parts/GalleryLightbox.vue";
+import { watch } from "vue";
 
+const lightboxOpen = ref(false);
+const openLightbox = () => (lightboxOpen.value = true);
+const closeLightbox = () => (lightboxOpen.value = false);
 const route = useRoute();
 const slug = computed(() => String(route.params.slug));
 const work = computed(() => works.find((w) => w.slug === slug.value));
@@ -107,14 +112,23 @@ const nextImage = () => {
             <!-- column 容器 -->
             <div class="flex flex-col w-full h-full">
               <!-- 圖片 -->
-              <div
-                class="relative w-full h-[50vh] bg-black/5 overflow-hidden rounded-2xl"
-              >
+              <div class="relative w-full h-[50vh] overflow-hidden rounded-2xl">
                 <img
                   v-if="images.length"
                   :src="images[currentIndex]"
                   :alt="work!.title"
-                  class="absolute inset-0 w-full h-full object-contain"
+                  class="absolute inset-0 w-full h-full object-contain cursor-zoom-in"
+                  @click="openLightbox"
+                />
+
+                <!-- 放大 -->
+                <GalleryLightbox
+                  :open="lightboxOpen"
+                  :images="images"
+                  :index="currentIndex"
+                  :alt="work?.title"
+                  @close="closeLightbox"
+                  @update:index="(v) => (currentIndex = v)"
                 />
               </div>
 
