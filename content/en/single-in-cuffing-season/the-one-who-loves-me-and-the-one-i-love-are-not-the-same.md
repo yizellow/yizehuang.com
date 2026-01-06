@@ -19,12 +19,11 @@ bg-primary">I sacrifice myself for love</mark>`[3]`, or whether reality is simpl
 
 ::
 
-<div class="flex justify-center text-center items-center flex-col ">
-
-![my image](/images/content/gym.png){style="display:block; margin:0 auto; max-width:60%; height:auto;"}
-
-<p class="underline">I asked an AI to depict the people I saw at the gym.</p>
-</div>
+<FigureBlock
+src="/images/content/mene1.png"
+alt="meme1"
+caption="Some people, even when they are in a relationship, still prioritize themselves."
+:underline="true"> </FigureBlock>
 
 ::footnote
 `[1]` In Taiwan, students take entrance examinations in junior high school and are assigned to different senior high schools based on their scores. Many high schools further divide students into separate classes, and those with higher academic performance—aiming for admission to top universities—are placed into so-called “college-preparatory classes,” where they receive focused training from the school.
