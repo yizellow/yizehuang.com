@@ -16,7 +16,7 @@ onMounted(() => {
   gsap.to(introP.value, {
     duration: 1.2,
     scrambleText: {
-      text: "Each theme is composed of textual narratives, artworks, and a virtual exhibition, and will be continuously updated and revised; all updates are shown in the last updated date. The virtual exhibition is accessible on desktop devices only and does not support mobile devices.",
+      text: "Each theme is composed of text artworks, and a virtual exhibition, and will be continuously updated and revised; all updates are shown in the last updated date.",
     },
   });
 });
@@ -35,10 +35,9 @@ onMounted(() => {
         ref="introP"
         class="newsreader border-primary text-secondary text-md leading-relaxed p-4 border-2 rounded-b-sm"
       >
-        Each theme is composed of textual narratives, artworks, and a virtual
-        exhibition, and will be continuously updated and revised; all updates
-        are shown in the last updated date. The virtual exhibition is accessible
-        on desktop devices only and does not support mobile devices.
+        Each theme is composed of text, artworks, and a virtual exhibition, and
+        will be continuously updated and revised; all updates are shown in the
+        last updated date.
       </p>
     </section>
     <NuxtLink to="/context/single-in-cuffing-season" class="block">
@@ -82,6 +81,13 @@ onMounted(() => {
         >
           Virtual Exhibition
         </a>
+        <NuxtLink
+          to="/context/single-in-cuffing-season"
+          @click.stop
+          class="silkscreen hover:invert bg-secondary/80 text-white text-[10px] md:text-xs px-3 py-1 rounded-full self-center lg:self-auto lg:ml-2 lg:whitespace-nowrap"
+        >
+          Text
+        </NuxtLink>
       </section>
     </NuxtLink>
   </main>
