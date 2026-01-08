@@ -1,6 +1,6 @@
 <template>
   <div class="[h-3vh] overflow-hidden relative opacity-90">
-    <div class="flex animate-scroll whitespace-nowrap items-between">
+    <div class="flex animate-scroll whitespace-nowrap">
       <div class="flex items-center text-secondary text-sm px-4">
         <span
           class="newsreader text-lg underline underline-offset-1 decoration-primary"
