@@ -58,6 +58,15 @@ const nextImage = () => {
   if (!images.value.length) return;
   currentIndex.value = (currentIndex.value + 1) % images.value.length;
 };
+const contentEl = ref<HTMLElement | null>(null);
+
+const scrollToContent = () => {
+  const y = contentEl.value?.getBoundingClientRect().top
+    ? window.scrollY + contentEl.value.getBoundingClientRect().top
+    : window.innerHeight;
+
+  window.scrollTo({ top: y, behavior: "smooth" });
+};
 </script>
 <template>
   <!-- 1) 影片固定在最上層（背景） -->
@@ -72,11 +81,26 @@ const nextImage = () => {
       allow="autoplay; encrypted-media"
       allowfullscreen
     ></iframe>
+
+    <!-- ✅ 新增：向下箭頭（覆蓋在影片上） -->
+    <button
+      type="button"
+      aria-label="Scroll down"
+      @click="
+        () => {
+          scrollToContent();
+        }
+      "
+      class="absolute text-bold text-secondary bottom-6 left-1/2 -translate-x-1/2 z-20 opacity-90 backdrop-blur-sm hover:invert w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+    >
+      ↓
+    </button>
   </section>
 
   <!-- 下面內容往上滑，會遮住影片 -->
-  <main class="relative w-full z-10" :class="videoSrc ? 'pt-[100vh]' : 'pt-0'">
+  <main class="relative w-full z-10" :class="videoSrc ? 'mt-[100vh]' : 'mt-0'">
     <!-- 這一層做成卡片感（可選） -->
+    <div ref="contentEl" class="h-1"></div>
 
     <div
       class="rounded-t-3xl shadow-2xl px-6 py-12 backdrop-blur-sm max-w-8xl mx-auto"
