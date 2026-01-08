@@ -53,7 +53,6 @@ const nextSectionEl = ref(null);
 const scrollToNext = () => {
   nextSectionEl.value?.scrollIntoView({ behavior: "smooth", block: "start" });
 };
-
 onMounted(() => {
   checkDevice();
 
@@ -125,10 +124,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="container" class="relative w-full h-[280vh] bg-white">
-    <section class="sticky top-0 w-full h-screen relative">
+    <section class="sticky top-0 w-full h-screen">
       <video
         ref="video"
-        class="w-full h-screen z-0 mix-blend-darken"
+        class="w-full h-screen z-5 mix-blend-darken"
         src="/videos/yizetitle_fast2.mp4"
         muted
         playsinline
@@ -137,19 +136,15 @@ onBeforeUnmount(() => {
 
       <div
         ref="card"
-        class="absolute inset-0 w-screen h-screen bg-secondary/50 origin-center border-primary rounded-xl z-10 overflow-hidden"
+        class="absolute w-screen h-screen bg-secondary/50 origin-center border-primary rounded-xl z-10 overflow-hidden"
       >
         <Model />
-
-        <!-- 右下角提示文字 -->
         <div
           class="absolute bottom-4 right-4 text-secondary silkscreen text-sm md:text-base pointer-events-none select-none opacity-80"
         >
           drag me!
         </div>
       </div>
-
-      <!-- ↓ 向下箭頭 -->
       <button
         type="button"
         aria-label="Scroll down"
