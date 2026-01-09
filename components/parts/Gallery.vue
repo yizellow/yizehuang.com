@@ -182,7 +182,7 @@ onMounted(() => {
       class="bg-secondary/60 silkscreen w-3/4 h-[5vh] border-2 rounded-4xl
              text-primary flex justify-center items-center mb-2 p-2 seemore cursor-pointer"
     >
-      MORE...
+      READ...
     </div>
   </main>
 `;
