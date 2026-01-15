@@ -112,6 +112,7 @@ const scrollToContent = () => {
           <!-- 右：文字（桌機等高） -->
           <aside class="lg:col-span-1 order-1 lg:order-2 flex">
             <div
+              @click="openLightbox"
               class="bg-primary/90 shadow-lg shadow-black/10 backdrop-blur-md hover:invert rounded-2xl flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-center gap-2 w-full h-full py-3 px-3"
             >
               <p class="text-lg lg:text-2xl text-secondary/80 silkscreen">
