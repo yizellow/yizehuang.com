@@ -204,6 +204,24 @@ const scrollToContent = () => {
         >
           {{ work!.desc }}
         </p>
+        <div
+          v-if="work!.links?.length"
+          class="mt-8 flex flex-wrap justify-center gap-3"
+        >
+          <a
+            v-for="(l, i) in work!.links"
+            :key="l.url + i"
+            :href="l.url"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 rounded-full border border-secondary/40 px-5 py-2 text-sm text-secondary hover:invert transition"
+          >
+            <span class="silkscreen">
+              {{ l.label }}
+            </span>
+            <span aria-hidden>↗</span>
+          </a>
+        </div>
       </section>
 
       <!-- clips 區塊照你原本的放這裡 -->

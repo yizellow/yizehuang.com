@@ -9,6 +9,11 @@ export type Work = {
   video?: string;
   medium?: string;
   clips?: { title?: string; url: string }[];
+  links?: WorkLink[];
+};
+export type WorkLink = {
+  label: string;
+  url: string;
 };
 
 export const works: Work[] = [
@@ -110,6 +115,12 @@ Originally, the game was planned to go beyond online activities. We envisioned t
     year: "2020~",
     cover:
       "https://cdnb.artstation.com/p/assets/images/images/081/859/773/medium/yize-huang-2024-11-12-11-55-05.jpg?1731427234",
+    links: [
+      {
+        label: "See more Yizellow",
+        url: "https://www.instagram.com/yizellow/",
+      },
+    ],
     desc: `
 
 Yizellow is a project based on the theme of “The Basics of Styling”. Every artist has their own style, and the process of finding that style requires deep exploration. During my studies at art school, I realized that my motivation to create was often too purposeful, which made me feel constrained and unable to express myself freely. So I decided to take a more relaxed approach, experimenting with random doodles and sketches, including some oil paintings. Eventually, these works were assembled into my first solo exhibition: 《Yizellow》 (《Myself》)in 2019.
