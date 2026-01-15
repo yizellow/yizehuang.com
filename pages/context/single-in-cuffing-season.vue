@@ -77,6 +77,17 @@ const toc = computed<TocItem[]>(() =>
               </ul>
             </li>
           </ul>
+          <div class="mt-6">
+            <NuxtLink
+              to="https://community.yizehuang.com/subscribe"
+              external
+              target="_blank"
+              rel="noopener"
+              class="inline-flex w-full items-center justify-center rounded-full border border-primary/40 px-4 py-2 text-xs text-neutral-700 hover:border-primary hover:text-black"
+            >
+              {{ locale === "zh" ? "訂閱電子報" : "Subscribe" }}
+            </NuxtLink>
+          </div>
         </div>
       </aside>
 
@@ -87,6 +98,38 @@ const toc = computed<TocItem[]>(() =>
             :value="a"
             class="max-w-none prose prose-neutral [&_h1]:font-silkscreen [&_h1]:text-gray-900 [&_h2_a]:text-gray-700 [&_h2_a]:decoration-primary [&_h2]:font-newsreader [&_h3_a]:text-gray-600 [&_h3_a]:no-underline [&_h3]:font-newsreader [&_p]:text-gray-700 [&_p]:font-newsreader"
           />
+        </section>
+
+        <!-- CTA: top -->
+        <section class="rounded-2xl border border-neutral-200 bg-white/40 p-6">
+          <div
+            class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <p class="font-newsreader text-lg text-neutral-900">
+                {{
+                  locale === "zh" ? "訂閱電子報" : "Subscribe to my newsletter"
+                }}
+              </p>
+              <p class="mt-1 text-sm text-neutral-500">
+                {{
+                  locale === "zh"
+                    ? "收到新文章、展覽與作品更新。"
+                    : "New writing, exhibitions, and works."
+                }}
+              </p>
+            </div>
+
+            <NuxtLink
+              to="https://community.yizehuang.com/subscribe"
+              external
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm text-white hover:opacity-90"
+            >
+              {{ locale === "zh" ? "訂閱" : "Subscribe" }}
+            </NuxtLink>
+          </div>
         </section>
       </article>
     </div>
