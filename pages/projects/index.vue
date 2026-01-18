@@ -1,5 +1,16 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, onBeforeUnmount } from "vue";
+definePageMeta({
+  layout: "default",
+  noNavbarPadding: false,
+});
+import {
+  ref,
+  computed,
+  onMounted,
+  watch,
+  onBeforeUnmount,
+  nextTick,
+} from "vue";
 import gsap from "gsap";
 import { works } from "~/data/works";
 import TopBanner from "~/components/parts/TopBanner.vue";
@@ -7,17 +18,107 @@ import TopBanner from "~/components/parts/TopBanner.vue";
 const isClient = typeof window !== "undefined";
 
 const container = ref<HTMLElement | null>(null);
+const spacer = ref<HTMLElement | null>(null);
+
 const active = ref<"all" | "sics" | "before2025" | "uncategorized">("all");
 
 /** All 專用 endless list */
 const allSlides = ref([...works]);
 const loadingMore = ref(false);
 
-const loadMoreAll = () => {
+/** ===== smooth scroll（只在 ALL 啟用）===== */
+let rafId = 0;
+let scrollY = 0;
+let currentY = 0;
+const ease = 0.1;
+
+let ro: ResizeObserver | null = null;
+
+const TOP_PAD = 96;
+
+const syncSpacer = () => {
+  if (!isClient) return;
+  if (!container.value || !spacer.value) return;
+
+  const pad = active.value === "all" ? TOP_PAD : 0;
+
+  spacer.value.style.paddingTop = `${pad}px`;
+  spacer.value.style.height = `${container.value.scrollHeight}px`; // 不要 + pad
+};
+
+const update = () => {
+  currentY += (scrollY - currentY) * ease;
+  if (container.value) gsap.set(container.value, { y: -currentY });
+  rafId = requestAnimationFrame(update);
+};
+
+const onScrollSmooth = () => {
+  scrollY = window.scrollY || 0;
+};
+
+const enableAllSmooth = async () => {
+  if (!isClient) return;
+  await nextTick();
+  if (!container.value) return;
+
+  // 固定內容層，transform 模擬滾動
+  container.value.style.position = "fixed";
+  container.value.style.top = `${TOP_PAD}px`;
+  container.value.style.left = "0";
+  container.value.style.width = "100%";
+  container.value.style.willChange = "transform";
+
+  // spacer 撐高，提供實際 scroll 距離
+  syncSpacer();
+
+  // 高度變動（loadMore / 圖片載入）自動更新 spacer
+  ro?.disconnect();
+  ro = new ResizeObserver(() => syncSpacer());
+  ro.observe(container.value);
+
+  // init
+  scrollY = window.scrollY || 0;
+  currentY = scrollY;
+
+  window.addEventListener("scroll", onScrollSmooth, { passive: true });
+
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(update);
+};
+
+const disableAllSmooth = () => {
+  if (!isClient) return;
+
+  window.removeEventListener("scroll", onScrollSmooth);
+  cancelAnimationFrame(rafId);
+
+  ro?.disconnect();
+  ro = null;
+
+  if (container.value) {
+    gsap.set(container.value, { y: 0 });
+    container.value.style.position = "";
+    container.value.style.top = "";
+    container.value.style.left = "";
+    container.value.style.width = "";
+    container.value.style.willChange = "";
+  }
+
+  if (spacer.value) {
+    spacer.value.style.height = "0px";
+    spacer.value.style.paddingTop = "0px";
+  }
+};
+
+/** load more（記得同步 spacer） */
+const loadMoreAll = async () => {
   if (loadingMore.value) return;
   loadingMore.value = true;
 
   allSlides.value = [...allSlides.value, ...works];
+
+  await nextTick();
+  syncSpacer();
 
   if (isClient) {
     window.requestAnimationFrame(() => {
@@ -32,31 +133,31 @@ const loadMoreAll = () => {
 const normalizedWorks = computed(() =>
   works.map((w: any) => ({
     ...w,
-    group: w.group ?? "uncategorized", // sics | before2025 | uncategorized
-    stage: w.stage, // in-progress | undefined
-  }))
+    group: w.group ?? "uncategorized",
+    stage: w.stage,
+  })),
 );
 
 const sicsMain = computed(() =>
   normalizedWorks.value.filter(
-    (w) => w.group === "sics" && w.stage !== "in-progress"
-  )
+    (w) => w.group === "sics" && w.stage !== "in-progress",
+  ),
 );
 
 const sicsInProgress = computed(() =>
   normalizedWorks.value.filter(
-    (w) => w.group === "sics" && w.stage === "in-progress"
-  )
+    (w) => w.group === "sics" && w.stage === "in-progress",
+  ),
 );
 
 const before2025Works = computed(() =>
   normalizedWorks.value
     .filter((w) => w.group === "before2025")
-    .sort((a, b) => Number(b.year) - Number(a.year))
+    .sort((a, b) => Number(b.year) - Number(a.year)),
 );
 
 const uncategorizedWorks = computed(() =>
-  normalizedWorks.value.filter((w) => w.group === "uncategorized")
+  normalizedWorks.value.filter((w) => w.group === "uncategorized"),
 );
 
 const filteredWorks = computed(() => {
@@ -65,7 +166,7 @@ const filteredWorks = computed(() => {
   return uncategorizedWorks.value;
 });
 
-/** ===== All：分段 stream（每輪都重複標題） ===== */
+/** ===== All：分段 stream（每輪都重複標題）===== */
 type StreamItem =
   | { type: "header"; key: string; label: string }
   | { type: "work"; key: string; work: any };
@@ -79,10 +180,10 @@ const groupLabel = (g: string) => {
 
 const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
   const sicsMainList = list.filter(
-    (w) => w.group === "sics" && w.stage !== "in-progress"
+    (w) => w.group === "sics" && w.stage !== "in-progress",
   );
   const sicsProgList = list.filter(
-    (w) => w.group === "sics" && w.stage === "in-progress"
+    (w) => w.group === "sics" && w.stage === "in-progress",
   );
   const beforeList = list
     .filter((w) => w.group === "before2025")
@@ -92,17 +193,13 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
   const out: StreamItem[] = [];
 
   if (sicsMainList.length) {
-    out.push({
-      type: "header",
-      key: `h-sics-${roundKey}`,
-      label: groupLabel("sics"),
-    });
+    out.push({ type: "header", key: `h-sics-${roundKey}`, label: "sics" });
     sicsMainList.forEach((w, i) =>
       out.push({
         type: "work",
         key: `w-${roundKey}-s-${w.slug}-${i}`,
         work: w,
-      })
+      }),
     );
   }
 
@@ -117,7 +214,7 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
         type: "work",
         key: `w-${roundKey}-p-${w.slug}-${i}`,
         work: w,
-      })
+      }),
     );
   }
 
@@ -132,7 +229,7 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
         type: "work",
         key: `w-${roundKey}-b-${w.slug}-${i}`,
         work: w,
-      })
+      }),
     );
   }
 
@@ -147,7 +244,7 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
         type: "work",
         key: `w-${roundKey}-u-${w.slug}-${i}`,
         work: w,
-      })
+      }),
     );
   }
 
@@ -174,7 +271,7 @@ const allRenderStream = computed<StreamItem[]>(() => {
   return out;
 });
 
-/** ===== endless：scroll 距離底部觸發（比 IntersectionObserver 穩） ===== */
+/** ===== endless：接近底部就 loadMore ===== */
 let ticking = false;
 
 const checkNearBottom = () => {
@@ -202,25 +299,28 @@ const onScrollEndless = () => {
   });
 };
 
-/** 切回 All：重置 + 立刻補載一次（頁面不夠高也能自動加） */
+/** tab 切換：All 啟用 smooth + endless，其它關閉 smooth */
 watch(
   active,
-  (v) => {
+  async (v) => {
+    if (!isClient) return;
+
     if (v === "all") {
-      gsap.set(container.value, { y: 0 });
       allSlides.value = [...works];
-      if (isClient) window.requestAnimationFrame(() => checkNearBottom());
+      await nextTick();
+      await enableAllSmooth();
+      window.requestAnimationFrame(() => checkNearBottom());
+    } else {
+      disableAllSmooth();
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(() => {
   if (!isClient) return;
 
   window.addEventListener("scroll", onScrollEndless, { passive: true });
-
-  // 初始：如果內容太短，先補到可滾
   window.requestAnimationFrame(() => checkNearBottom());
 });
 
@@ -228,11 +328,13 @@ onBeforeUnmount(() => {
   if (!isClient) return;
 
   window.removeEventListener("scroll", onScrollEndless);
+  disableAllSmooth();
 });
 </script>
 
 <template>
   <TopBanner />
+  <div ref="spacer" aria-hidden="true"></div>
 
   <!-- Bottom Tabbar -->
   <div
@@ -357,7 +459,6 @@ onBeforeUnmount(() => {
         </template>
       </section>
 
-      <!-- loading（可留） -->
       <div
         v-if="active === 'all' && loadingMore"
         class="text-center text-xs text-neutral-400"
@@ -367,3 +468,4 @@ onBeforeUnmount(() => {
     </div>
   </main>
 </template>
+
