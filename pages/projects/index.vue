@@ -3,6 +3,7 @@ definePageMeta({
   layout: "default",
   noNavbarPadding: false,
 });
+
 import {
   ref,
   computed,
@@ -43,7 +44,7 @@ const syncSpacer = () => {
   const pad = active.value === "all" ? TOP_PAD : 0;
 
   spacer.value.style.paddingTop = `${pad}px`;
-  spacer.value.style.height = `${container.value.scrollHeight}px`; // 不要 + pad
+  spacer.value.style.height = `${container.value.scrollHeight}px`;
 };
 
 const update = () => {
@@ -61,22 +62,18 @@ const enableAllSmooth = async () => {
   await nextTick();
   if (!container.value) return;
 
-  // 固定內容層，transform 模擬滾動
   container.value.style.position = "fixed";
   container.value.style.top = `${TOP_PAD}px`;
   container.value.style.left = "0";
-  container.value.style.width = "100%";
+  container.value.style.width = "calc(100vw - (100vw - 100%))";
   container.value.style.willChange = "transform";
 
-  // spacer 撐高，提供實際 scroll 距離
   syncSpacer();
 
-  // 高度變動（loadMore / 圖片載入）自動更新 spacer
   ro?.disconnect();
   ro = new ResizeObserver(() => syncSpacer());
   ro.observe(container.value);
 
-  // init
   scrollY = window.scrollY || 0;
   currentY = scrollY;
 
@@ -134,119 +131,91 @@ const normalizedWorks = computed(() =>
   works.map((w: any) => ({
     ...w,
     group: w.group ?? "uncategorized",
-    stage: w.stage,
+    stage: w.stage as "in-progress" | undefined,
   })),
 );
 
-const sicsMain = computed(() =>
-  normalizedWorks.value.filter(
-    (w) => w.group === "sics" && w.stage !== "in-progress",
-  ),
-);
-
-const sicsInProgress = computed(() =>
-  normalizedWorks.value.filter(
-    (w) => w.group === "sics" && w.stage === "in-progress",
-  ),
-);
-
-const before2025Works = computed(() =>
-  normalizedWorks.value
-    .filter((w) => w.group === "before2025")
-    .sort((a, b) => Number(b.year) - Number(a.year)),
-);
-
-const uncategorizedWorks = computed(() =>
-  normalizedWorks.value.filter((w) => w.group === "uncategorized"),
-);
-
 const filteredWorks = computed(() => {
-  if (active.value === "sics") return sicsMain.value;
-  if (active.value === "before2025") return before2025Works.value;
-  return uncategorizedWorks.value;
+  if (active.value === "all") return normalizedWorks.value;
+  return normalizedWorks.value.filter((w) => w.group === active.value);
 });
 
-/** ===== All：分段 stream（每輪都重複標題）===== */
+/** ===== stage 拆分（通用）===== */
+const splitStage = (list: any[]) => {
+  const main = list.filter((w) => w.stage !== "in-progress");
+  const prog = list.filter((w) => w.stage === "in-progress");
+  return { main, prog };
+};
+
+/** ===== stream item ===== */
 type StreamItem =
-  | { type: "header"; key: string; label: string }
+  | {
+      type: "header";
+      key: string;
+      label: string;
+      kind: "group" | "progress";
+    }
   | { type: "work"; key: string; work: any };
 
 const groupLabel = (g: string) => {
-  if (g === "sics") return "sics";
+  if (g === "sics") return "Single in Cuffing Season";
   if (g === "before2025") return "Before 2025";
   if (g === "uncategorized") return "Uncategorized";
   return g;
 };
 
+/** ===== All：每個主題都支援 IN PROGRESS ===== */
 const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
-  const sicsMainList = list.filter(
-    (w) => w.group === "sics" && w.stage !== "in-progress",
-  );
-  const sicsProgList = list.filter(
-    (w) => w.group === "sics" && w.stage === "in-progress",
-  );
-  const beforeList = list
-    .filter((w) => w.group === "before2025")
-    .sort((a, b) => Number(b.year) - Number(a.year));
-  const uncList = list.filter((w) => w.group === "uncategorized");
+  const byGroup = (g: string) =>
+    list.filter((w) => (w.group ?? "uncategorized") === g);
+
+  const groups: Array<{ g: string; sort?: (a: any, b: any) => number }> = [
+    { g: "sics" },
+    { g: "before2025", sort: (a, b) => Number(b.year) - Number(a.year) },
+    { g: "uncategorized" },
+  ];
 
   const out: StreamItem[] = [];
 
-  if (sicsMainList.length) {
-    out.push({ type: "header", key: `h-sics-${roundKey}`, label: "sics" });
-    sicsMainList.forEach((w, i) =>
-      out.push({
-        type: "work",
-        key: `w-${roundKey}-s-${w.slug}-${i}`,
-        work: w,
-      }),
-    );
-  }
+  groups.forEach(({ g, sort }) => {
+    let items = byGroup(g);
+    if (sort) items = [...items].sort(sort);
 
-  if (sicsProgList.length) {
+    const { main, prog } = splitStage(items);
+    if (!main.length && !prog.length) return;
+
     out.push({
       type: "header",
-      key: `h-prog-${roundKey}`,
-      label: "IN PROGRESS",
+      key: `h-${g}-${roundKey}`,
+      label: groupLabel(g),
+      kind: "group",
     });
-    sicsProgList.forEach((w, i) =>
-      out.push({
-        type: "work",
-        key: `w-${roundKey}-p-${w.slug}-${i}`,
-        work: w,
-      }),
-    );
-  }
 
-  if (beforeList.length) {
-    out.push({
-      type: "header",
-      key: `h-before-${roundKey}`,
-      label: groupLabel("before2025"),
-    });
-    beforeList.forEach((w, i) =>
+    main.forEach((w, i) =>
       out.push({
         type: "work",
-        key: `w-${roundKey}-b-${w.slug}-${i}`,
+        key: `w-${roundKey}-${g}-m-${w.slug}-${i}`,
         work: w,
       }),
     );
-  }
 
-  if (uncList.length) {
-    out.push({
-      type: "header",
-      key: `h-unc-${roundKey}`,
-      label: groupLabel("uncategorized"),
-    });
-    uncList.forEach((w, i) =>
+    if (prog.length) {
       out.push({
-        type: "work",
-        key: `w-${roundKey}-u-${w.slug}-${i}`,
-        work: w,
-      }),
-    );
-  }
+        type: "header",
+        key: `h-${g}-prog-${roundKey}`,
+        label: "IN PROGRESS",
+        kind: "progress",
+      });
+
+      prog.forEach((w, i) =>
+        out.push({
+          type: "work",
+          key: `w-${roundKey}-${g}-p-${w.slug}-${i}`,
+          work: w,
+        }),
+      );
+    }
+  });
 
   return out;
 };
@@ -257,15 +226,41 @@ const allRenderStream = computed<StreamItem[]>(() => {
 
   for (let start = 0; start < allSlides.value.length; start += baseLen) {
     const chunk = allSlides.value.slice(start, start + baseLen);
-
-    const normalizedChunk = chunk.map((w: any) => ({
-      ...w,
-      group: w.group ?? "uncategorized",
-      stage: w.stage,
-    }));
-
     const roundIndex = Math.floor(start / baseLen);
-    out.push(...toSegmentStream(normalizedChunk, `r${roundIndex}`));
+    out.push(...toSegmentStream(chunk, `r${roundIndex}`));
+  }
+
+  return out;
+});
+
+/** ===== 非 ALL：同樣支援 IN PROGRESS（且 before2025 依年份排序）===== */
+const tabRenderStream = computed<StreamItem[]>(() => {
+  if (active.value === "all") return [];
+
+  let list = normalizedWorks.value.filter((w) => w.group === active.value);
+
+  if (active.value === "before2025") {
+    list = [...list].sort((a, b) => Number(b.year) - Number(a.year));
+  }
+
+  const { main, prog } = splitStage(list);
+  const out: StreamItem[] = [];
+
+  main.forEach((w, i) =>
+    out.push({ type: "work", key: `t-m-${w.slug}-${i}`, work: w }),
+  );
+
+  if (prog.length) {
+    out.push({
+      type: "header",
+      key: "t-prog",
+      label: "IN PROGRESS",
+      kind: "progress",
+    });
+
+    prog.forEach((w, i) =>
+      out.push({ type: "work", key: `t-p-${w.slug}-${i}`, work: w }),
+    );
   }
 
   return out;
@@ -344,23 +339,23 @@ onBeforeUnmount(() => {
       class="inline-flex rounded-full border border-neutral-200 overflow-hidden"
     >
       <button
-        class="px-4 py-2 text-sm"
+        class="px-4 py-2 text-xs silkscreen"
         :class="active === 'all' ? 'bg-primary text-white' : 'text-neutral-700'"
         @click="active = 'all'"
       >
         All
       </button>
       <button
-        class="px-4 py-2 text-sm"
+        class="px-4 py-2 text-xs silkscreen"
         :class="
           active === 'sics' ? 'bg-primary text-white' : 'text-neutral-700'
         "
         @click="active = 'sics'"
       >
-        sics
+        Single in Cuffing Season
       </button>
       <button
-        class="px-4 py-2 text-sm"
+        class="px-4 py-2 text-xs silkscreen"
         :class="
           active === 'before2025' ? 'bg-primary text-white' : 'text-neutral-700'
         "
@@ -369,7 +364,7 @@ onBeforeUnmount(() => {
         Before 2025
       </button>
       <button
-        class="px-4 py-2 text-sm"
+        class="px-4 py-2 text-xs silkscreen"
         :class="
           active === 'uncategorized'
             ? 'bg-primary text-white'
@@ -391,18 +386,27 @@ onBeforeUnmount(() => {
       <section
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12"
       >
-        <!-- ===== ALL（分類標題 + endless）===== -->
+        <!-- ===== ALL（分類標題 + endless + 每個主題都有 IN PROGRESS）===== -->
         <template v-if="active === 'all'">
           <template v-for="item in allRenderStream" :key="item.key">
             <div v-if="item.type === 'header'" class="col-span-full pt-6">
-              <div class="flex items-center gap-3">
-                <div class="h-px flex-1 bg-neutral-200"></div>
+              <!-- 分類標題 -->
+              <div v-if="item.kind === 'group'" class="flex items-center gap-3">
+                <div class="h-px flex-1 bg-primary"></div>
                 <h2
                   class="silkscreen text-secondary/80 text-sm tracking-widest"
                 >
                   {{ item.label }}
                 </h2>
-                <div class="h-px flex-1 bg-neutral-200"></div>
+                <div class="h-px flex-1 bg-primary"></div>
+              </div>
+
+              <!-- IN PROGRESS 標題 -->
+              <div v-else class="flex items-center gap-2">
+                <div class="h-1 w-6 bg-primary"></div>
+                <h3 class="silkscreen text-primary text-xs tracking-[1em]">
+                  {{ item.label }}
+                </h3>
               </div>
             </div>
 
@@ -432,30 +436,53 @@ onBeforeUnmount(() => {
           </template>
         </template>
 
-        <!-- ===== 非 ALL（單純 grid）===== -->
+        <!-- ===== 非 ALL（同樣有 IN PROGRESS）===== -->
         <template v-else>
-          <NuxtLink
-            v-for="(item, index) in filteredWorks"
-            :key="item.slug + '-' + index"
-            :to="`/projects/${item.slug}`"
-            class="flex flex-col justify-center items-center overflow-hidden transition cursor-pointer"
-          >
-            <div class="relative w-full">
-              <img
-                :src="item.cover"
-                :alt="item.title"
-                class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
-                loading="lazy"
-              />
+          <template v-for="item in tabRenderStream" :key="item.key">
+            <div v-if="item.type === 'header'" class="col-span-full pt-6">
+              <!-- 這裡只會出現 IN PROGRESS（你也可保留同樣判斷） -->
+              <div v-if="item.kind === 'group'" class="flex items-center gap-3">
+                <div class="h-1 flex-1 bg-neutral-200"></div>
+                <h2
+                  class="silkscreen text-secondary/80 text-sm tracking-widest"
+                >
+                  {{ item.label }}
+                </h2>
+                <div class="h-px flex-1 bg-neutral-200"></div>
+              </div>
+
+              <div v-else class="flex items-center gap-2">
+                <div class="h-1 w-6 bg-primary"></div>
+                <h3 class="silkscreen text-primary text-xs tracking-[1em]">
+                  {{ item.label }}
+                </h3>
+              </div>
             </div>
 
-            <div
-              class="flex justify-between items-center w-full px-1 pt-2 sm:text-base md:text-xs"
+            <NuxtLink
+              v-else
+              :to="`/projects/${item.work.slug}`"
+              class="flex flex-col justify-center items-center overflow-hidden transition cursor-pointer"
             >
-              <h3 class="newsreader text-secondary/70">{{ item.title }}</h3>
-              <div class="text-primary silkscreen">{{ item.year }}</div>
-            </div>
-          </NuxtLink>
+              <div class="relative w-full">
+                <img
+                  :src="item.work.cover"
+                  :alt="item.work.title"
+                  class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
+                  loading="lazy"
+                />
+              </div>
+
+              <div
+                class="flex justify-between items-center w-full px-1 pt-2 sm:text-base md:text-xs"
+              >
+                <h3 class="newsreader text-secondary/70">
+                  {{ item.work.title }}
+                </h3>
+                <div class="text-primary silkscreen">{{ item.work.year }}</div>
+              </div>
+            </NuxtLink>
+          </template>
         </template>
       </section>
 
@@ -468,4 +495,3 @@ onBeforeUnmount(() => {
     </div>
   </main>
 </template>
-

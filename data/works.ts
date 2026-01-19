@@ -180,6 +180,8 @@ During the process of creating many doodles, I began to think about how artists 
     slug: "me-2019",
     title: "Me 2019",
     group: "before2025",
+    stage: "in-progress",
+
     year: "2019",
     cover:
       "https://cdnb.artstation.com/p/assets/images/images/082/626/611/large/yize-huang-j4.jpg?1733473161",
