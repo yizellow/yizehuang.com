@@ -10,6 +10,8 @@ export type Work = {
   medium?: string;
   clips?: { title?: string; url: string }[];
   links?: WorkLink[];
+  group?: "sics" | "before2025" | "uncategorized";
+  stage?: "in-progress";
 };
 export type WorkLink = {
   label: string;
@@ -23,6 +25,7 @@ export const works: Work[] = [
     year: "2020",
     medium: "video game",
     video: "https://www.youtube.com/embed/sQpa6tkxzg8", // 沒有就刪掉這行
+    group: "before2025",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/082/633/124/large/yize-huang-2024-12-06-9-01-23.jpg?1733490357",
     desc: `About Chips:
@@ -112,6 +115,7 @@ Originally, the game was planned to go beyond online activities. We envisioned t
     slug: "yizellow",
     title: "Yizellow",
     medium: "color pencil",
+    group: "before2025",
     year: "2020~",
     cover:
       "https://cdnb.artstation.com/p/assets/images/images/081/859/773/medium/yize-huang-2024-11-12-11-55-05.jpg?1731427234",
@@ -152,6 +156,7 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "how-to-face-my-shadows_the-crouching",
     title: "How to face my shadows? The Crouching Boy",
+    group: "before2025",
     video: "https://www.youtube.com/embed/fUosYq6PAGU", // 沒有就刪掉這行
     medium: "3D Blender",
     year: "2022",
@@ -174,6 +179,7 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "me-2019",
     title: "Me 2019",
+    group: "before2025",
     year: "2019",
     cover:
       "https://cdnb.artstation.com/p/assets/images/images/082/626/611/large/yize-huang-j4.jpg?1733473161",
@@ -188,6 +194,7 @@ During the process of creating many doodles, I began to think about how artists 
   },
   {
     slug: "plastic_wrap_protection_Laocoon_and_his_sons",
+    group: "before2025",
     title: "Plastic wrap protection_Laocoon and his sons",
     medium: "3D Blender",
     year: "2022",
@@ -209,8 +216,10 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "republic_china_and_its_dick_david",
     title: "Republic China and Its Dick_David",
+    group: "before2025",
     medium: "3D Blender",
     year: "2022",
+
     cover:
       "https://cdnb.artstation.com/p/assets/images/images/052/282/401/large/yize-huang-ft.jpg?1659416553",
     desc: `
@@ -230,6 +239,7 @@ During the process of creating many doodles, I began to think about how artists 
   },
   {
     slug: "a_karaoke_machine_themed_around_taiwanese_romance",
+    group: "before2025",
     title: "A karaoke machine themed around Taiwanese romance",
     video: "https://www.youtube.com/embed/0X4zjlFPPtc", // 沒有就刪掉這行
     medium: "Light Installation",
@@ -249,6 +259,7 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "design_your_room",
     title: "Design your room",
+    group: "before2025",
     medium: "3D Blender",
     year: "2022",
     cover:
@@ -270,6 +281,7 @@ During the process of creating many doodles, I began to think about how artists 
     slug: "film_camera_before_2025",
     title: "Film Camera Before 2025",
     year: "~2025",
+    group: "before2025",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/082/332/470/large/yize-huang-2024-11-27-5-48-00.jpg?1732701058",
     desc: "",
@@ -282,6 +294,7 @@ During the process of creating many doodles, I began to think about how artists 
     slug: "zora",
     title: "Zora",
     year: "2019",
+    group: "before2025",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/082/626/608/large/yize-huang-jjj3.jpg?1733473156",
     desc: "This is Zora as I painted her many years ago.Back then, she was in her early twenties, unmarried, and without children.Now, although she looks much the same, you can tell at a glance—she has become a mother.",
@@ -295,6 +308,7 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "the_men_with_a_flower",
     title: "The men with a flower",
+    group: "before2025",
     year: "2019",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/082/626/602/large/yize-huang-pp2.jpg?1733473140",
@@ -313,6 +327,7 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "an_arizona_boy",
     title: "An Arizona boy",
+    group: "before2025",
     year: "2021",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/082/626/590/large/yize-huang-jj1.jpg?1733473110",
@@ -326,6 +341,7 @@ During the process of creating many doodles, I began to think about how artists 
   {
     slug: "tattoos",
     title: "Tattoos",
+    group: "before2025",
     year: "2019-2024",
     cover:
       "https://cdna.artstation.com/p/assets/images/images/095/016/998/medium/yize-huang-2026-01-02-14-52-00.webp?1767362073",
@@ -350,6 +366,7 @@ During the process of creating many doodles, I began to think about how artists 
   },
   {
     slug: "copied_love",
+    group: "sics",
     title: "Copied Love",
     year: "2015",
     cover:
