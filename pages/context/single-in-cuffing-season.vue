@@ -13,24 +13,19 @@ type Article = {
 
 const { locale } = useI18n();
 
-/** content 實際 path 前綴 */
 const base = computed(() => `/${locale.value}/single-in-cuffing-season`);
-
-/** 文章順序 */
 const articleList = [
   { slug: "marriage-as-a-matter-of-course" },
   { slug: "the-one-who-loves-me-and-the-one-i-love-are-not-the-same" },
   { slug: "a-seashell-and-a-copied-love" },
 ] as const;
 
-const slugs = computed(() => articleList.map((a) => a.slug));
-const paths = computed(() => slugs.value.map((s) => `${base.value}/${s}`));
+const paths = computed(() => articleList.map((a) => `${base.value}/${a.slug}`));
 
-/** 抓文章 */
 const { data: articles } = await useAsyncData<Article[]>(
-  () => `cuffing-exhibit-${locale.value}`,
+  () => `cuffing-exhibit:${locale.value}:${paths.value.join("|")}`,
   () => queryCollection("content").where("path", "IN", paths.value).all(),
-  { watch: [locale] }
+  { watch: [paths] },
 );
 
 /** 依 articleList 排回來 */
@@ -43,7 +38,7 @@ const orderedArticles = computed<Article[]>(() => {
 
 /** TOC 只顯示 h2/h3 */
 const toc = computed<TocItem[]>(() =>
-  orderedArticles.value.flatMap((a) => a.body?.toc?.links ?? [])
+  orderedArticles.value.flatMap((a) => a.body?.toc?.links ?? []),
 );
 </script>
 
