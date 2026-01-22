@@ -4,12 +4,24 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { slug } = getRouterParams(event) as { slug: string };
 
+  const projectId = config.public.sanityProjectId;
+  const dataset = config.public.sanityDataset;
+  const apiVersion = config.public.sanityApiVersion;
+  const token = config.sanityToken;
+
+  if (!projectId || !dataset || !apiVersion) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Missing SANITY public runtimeConfig",
+    });
+  }
+
   const client = createClient({
-    projectId: config.public.SANITY_PROJECT_ID,
-    dataset: config.public.SANITY_DATASET,
-    apiVersion: config.public.SANITY_API_VERSION,
+    projectId,
+    dataset,
+    apiVersion,
     useCdn: false,
-    token: config.SANITY_TOKEN,
+    token,
   });
 
   const query = `*[_type=="works" && slug.current==$slug][0]{
@@ -24,12 +36,10 @@ export default defineEventHandler(async (event) => {
     clips,
     links,
     desc,
-
     "coverUrl": select(
       cover.source=="url" => cover.url,
       cover.source=="upload" => cover.image.asset->url
     ),
-
     "imagesUrls": images[]{
       "url": select(
         source=="url" => url,
