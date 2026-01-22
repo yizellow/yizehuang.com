@@ -4,9 +4,9 @@ export function getSanityClient() {
   const config = useRuntimeConfig();
 
   return createClient({
-    projectId: config.public.sanityProjectId,
-    dataset: config.public.sanityDataset,
-    apiVersion: config.public.sanityApiVersion,
+    projectId: config.sanityProjectId,
+    dataset: config.sanityDataset,
+    apiVersion: config.sanityApiVersion,
     useCdn: false,
     token: config.sanityToken || undefined,
   });

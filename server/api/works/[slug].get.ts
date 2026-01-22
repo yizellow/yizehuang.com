@@ -4,15 +4,15 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { slug } = getRouterParams(event) as { slug: string };
 
-  const projectId = config.public.sanityProjectId;
-  const dataset = config.public.sanityDataset;
-  const apiVersion = config.public.sanityApiVersion;
+  const projectId = config.sanityProjectId;
+  const dataset = config.sanityDataset;
+  const apiVersion = config.sanityApiVersion;
   const token = config.sanityToken;
 
   if (!projectId || !dataset || !apiVersion) {
     throw createError({
       statusCode: 500,
-      statusMessage: "Missing SANITY public runtimeConfig",
+      statusMessage: "Missing SANITY runtimeConfig",
     });
   }
 
