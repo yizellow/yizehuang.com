@@ -1,12 +1,29 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { works } from "~/data/works";
+
+type Work = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  coverUrl?: string | null;
+  imagesUrls?: { url?: string | null }[]; // 你單筆 API 才會有，這裡先容錯
+};
 
 const props = defineProps<{ slug: string; intro?: string }>();
 
-const w = computed(() => works.find((x) => x.slug === props.slug));
+// ✅ client-only fetch（避免 SSR 取不到 /api）
+const { data } = await useFetch<Work[]>("/api/works", {
+  server: false,
+  default: () => [],
+});
+
+const w = computed(() => (data.value ?? []).find((x) => x.slug === props.slug));
 const href = computed(() => `/projects/${props.slug}`);
-const cover = computed(() => w.value?.cover || w.value?.images?.[0] || "");
+
+// ✅ cover：優先 coverUrl，沒有就退到 imagesUrls[0].url
+const cover = computed(
+  () => w.value?.coverUrl || w.value?.imagesUrls?.[0]?.url || "",
+);
 </script>
 
 <template>
