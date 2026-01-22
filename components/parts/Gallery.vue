@@ -1,7 +1,6 @@
 <!-- BoxTickerScroll.vue -->
 
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+<script setup lang="ts">
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import {
@@ -12,17 +11,16 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Gallery from "~/components/parts/Gallery.vue";
 import { useRouter } from "#imports";
-import { works } from "~/data/works";
-const displaySlides = computed(() =>
-  works
-    .filter((w) => featuredSlugs.includes(w.slug))
-    .map((w) => ({
-      slug: w.slug,
-      title: w.title,
-      year: w.year,
-      cover: w.cover,
-    }))
-);
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+
+type WorkDetail = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  year?: string;
+  coverUrl?: string | null; 
+};
+
 const featuredSlugs = [
   "chips",
   "yizellow",
@@ -31,13 +29,35 @@ const featuredSlugs = [
   "film_camera_before_2025",
   "the_men_with_a_flower",
 ];
-const slides = computed(() =>
-  displaySlides.value.map((item) => ({
-    img: item.cover,
-    caption: item.title,
-    slug: item.slug,
-  }))
+
+const { data: worksData } = await useFetch<WorkDetail[]>("/api/works", {
+  server: false,
+  default: () => [],
+});
+
+const worksList = computed(() => worksData.value ?? []);
+
+const displaySlides = computed(() =>
+  worksList.value
+    .filter((w) => w.slug && featuredSlugs.includes(w.slug))
+    .map((w) => ({
+      slug: w.slug!,
+      title: w.title ?? "",
+      year: w.year ?? "",
+      cover: w.coverUrl ?? "",
+    })),
 );
+
+const slides = computed(() =>
+  displaySlides.value
+    .filter((i) => i.cover)
+    .map((item) => ({
+      img: item.cover,
+      caption: item.title,
+      slug: item.slug,
+    })),
+);
+
 const router = useRouter();
 
 import picUrl from "@/assets/images/pic.jpg";
@@ -135,8 +155,8 @@ onMounted(() => {
         color: 0xf7f8fa,
         transparent: false,
         side: THREE.DoubleSide, // 看得到內壁
-      })
-    )
+      }),
+    ),
   );
   scene.add(cube);
   const edges = new THREE.LineSegments(
@@ -145,7 +165,7 @@ onMounted(() => {
       color: 0x00ff00,
       depthTest: false,
       depthWrite: false,
-    })
+    }),
   );
   edges.scale.set(1.001, 1.001, 1.001);
   scene.add(edges);
@@ -158,7 +178,7 @@ onMounted(() => {
       <div class="pic"><img src="${img}" /></div>
       <p class="opacity-90">${caption}</p>
     </div>
-  `
+  `,
     )
     .join("");
 
@@ -250,9 +270,9 @@ onMounted(() => {
         img.complete && img.naturalHeight !== 0
           ? Promise.resolve()
           : new Promise((resolve) =>
-              img.addEventListener("load", resolve, { once: true })
-            )
-      )
+              img.addEventListener("load", resolve, { once: true }),
+            ),
+      ),
     );
   };
 
@@ -284,7 +304,7 @@ onMounted(() => {
           -Math.max(
             0,
             (frontMain.scrollHeight ||
-              frontMain.getBoundingClientRect().height) - faceHeight
+              frontMain.getBoundingClientRect().height) - faceHeight,
           ),
         ease: "none",
         immediateRender: false,
@@ -295,13 +315,13 @@ onMounted(() => {
             `+=${Math.max(
               0,
               (frontMain.scrollHeight ||
-                frontMain.getBoundingClientRect().height) - faceHeight
+                frontMain.getBoundingClientRect().height) - faceHeight,
             )}`,
           scrub: true,
           markers: false,
           invalidateOnRefresh: true,
         },
-      }
+      },
     );
 
     // 其他面：與 front 同步距離，改用 px 位移確保可滑完整內容
@@ -317,7 +337,7 @@ onMounted(() => {
               -Math.max(
                 0,
                 (frontMain.scrollHeight ||
-                  frontMain.getBoundingClientRect().height) - faceHeight
+                  frontMain.getBoundingClientRect().height) - faceHeight,
               ),
             ease: "none",
             immediateRender: false,
@@ -328,13 +348,13 @@ onMounted(() => {
                 `+=${Math.max(
                   0,
                   (frontMain.scrollHeight ||
-                    frontMain.getBoundingClientRect().height) - faceHeight
+                    frontMain.getBoundingClientRect().height) - faceHeight,
                 )}`,
               scrub: true,
               markers: false,
               invalidateOnRefresh: true,
             },
-          }
+          },
         );
         otherScrollTweens.push(tween);
       });
