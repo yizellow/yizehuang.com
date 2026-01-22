@@ -13,8 +13,24 @@ import {
   nextTick,
 } from "vue";
 import gsap from "gsap";
-import { works } from "~/data/works";
 import TopBanner from "~/components/parts/TopBanner.vue";
+
+type Work = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  year?: string;
+  medium?: string;
+  group?: "sics" | "before2025" | "uncategorized" | string;
+  stage?: "in-progress";
+  coverUrl?: string | null;
+};
+
+const { data: worksData } = await useFetch<Work[]>("/api/works", {
+  default: () => [],
+});
+
+const worksList = computed<Work[]>(() => worksData.value ?? []);
 
 const isClient = typeof window !== "undefined";
 
@@ -24,7 +40,7 @@ const spacer = ref<HTMLElement | null>(null);
 const active = ref<"all" | "sics" | "before2025" | "uncategorized">("all");
 
 /** All 專用 endless list */
-const allSlides = ref([...works]);
+const allSlides = ref<Work[]>([]);
 const loadingMore = ref(false);
 
 /** ===== smooth scroll（只在 ALL 啟用）===== */
@@ -110,9 +126,11 @@ const disableAllSmooth = () => {
 /** load more（記得同步 spacer） */
 const loadMoreAll = async () => {
   if (loadingMore.value) return;
+  if (!worksList.value.length) return;
+
   loadingMore.value = true;
 
-  allSlides.value = [...allSlides.value, ...works];
+  allSlides.value = [...allSlides.value, ...worksList.value];
 
   await nextTick();
   syncSpacer();
@@ -128,9 +146,9 @@ const loadMoreAll = async () => {
 
 /** ===== 分類資料 ===== */
 const normalizedWorks = computed(() =>
-  works.map((w: any) => ({
+  worksList.value.map((w) => ({
     ...w,
-    group: w.group ?? "uncategorized",
+    group: (w.group ?? "uncategorized") as Work["group"],
     stage: w.stage as "in-progress" | undefined,
   })),
 );
@@ -221,7 +239,7 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
 };
 
 const allRenderStream = computed<StreamItem[]>(() => {
-  const baseLen = works.length || 1;
+  const baseLen = worksList.value.length || 1;
   const out: StreamItem[] = [];
 
   for (let start = 0; start < allSlides.value.length; start += baseLen) {
@@ -294,6 +312,23 @@ const onScrollEndless = () => {
   });
 };
 
+/** 初始化：資料到齊後，ALL 頁先塞一次 */
+watch(
+  worksList,
+  async (list) => {
+    if (!list.length) return;
+    if (active.value === "all") {
+      allSlides.value = [...list];
+      await nextTick();
+      if (isClient) {
+        await enableAllSmooth();
+        window.requestAnimationFrame(() => checkNearBottom());
+      }
+    }
+  },
+  { immediate: true },
+);
+
 /** tab 切換：All 啟用 smooth + endless，其它關閉 smooth */
 watch(
   active,
@@ -301,7 +336,7 @@ watch(
     if (!isClient) return;
 
     if (v === "all") {
-      allSlides.value = [...works];
+      allSlides.value = [...worksList.value];
       await nextTick();
       await enableAllSmooth();
       window.requestAnimationFrame(() => checkNearBottom());
@@ -386,11 +421,10 @@ onBeforeUnmount(() => {
       <section
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-12"
       >
-        <!-- ===== ALL（分類標題 + endless + 每個主題都有 IN PROGRESS）===== -->
+        <!-- ===== ALL ===== -->
         <template v-if="active === 'all'">
           <template v-for="item in allRenderStream" :key="item.key">
             <div v-if="item.type === 'header'" class="col-span-full pt-6">
-              <!-- 分類標題 -->
               <div v-if="item.kind === 'group'" class="flex items-center gap-3">
                 <div class="h-px flex-1 bg-primary"></div>
                 <h2
@@ -401,7 +435,6 @@ onBeforeUnmount(() => {
                 <div class="h-px flex-1 bg-primary"></div>
               </div>
 
-              <!-- IN PROGRESS 標題 -->
               <div v-else class="flex items-center gap-2">
                 <div class="h-1 w-6 bg-primary"></div>
                 <h3 class="silkscreen text-primary text-xs tracking-[1em]">
@@ -417,7 +450,8 @@ onBeforeUnmount(() => {
             >
               <div class="relative w-full">
                 <img
-                  :src="item.work.cover"
+                  v-if="item.work.coverUrl"
+                  :src="item.work.coverUrl"
                   :alt="item.work.title"
                   class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
                   loading="lazy"
@@ -436,22 +470,11 @@ onBeforeUnmount(() => {
           </template>
         </template>
 
-        <!-- ===== 非 ALL（同樣有 IN PROGRESS）===== -->
+        <!-- ===== 非 ALL ===== -->
         <template v-else>
           <template v-for="item in tabRenderStream" :key="item.key">
             <div v-if="item.type === 'header'" class="col-span-full pt-6">
-              <!-- 這裡只會出現 IN PROGRESS（你也可保留同樣判斷） -->
-              <div v-if="item.kind === 'group'" class="flex items-center gap-3">
-                <div class="h-1 flex-1 bg-neutral-200"></div>
-                <h2
-                  class="silkscreen text-secondary/80 text-sm tracking-widest"
-                >
-                  {{ item.label }}
-                </h2>
-                <div class="h-px flex-1 bg-neutral-200"></div>
-              </div>
-
-              <div v-else class="flex items-center gap-2">
+              <div class="flex items-center gap-2">
                 <div class="h-1 w-6 bg-primary"></div>
                 <h3 class="silkscreen text-primary text-xs tracking-[1em]">
                   {{ item.label }}
@@ -466,7 +489,8 @@ onBeforeUnmount(() => {
             >
               <div class="relative w-full">
                 <img
-                  :src="item.work.cover"
+                  v-if="item.work.coverUrl"
+                  :src="item.work.coverUrl"
                   :alt="item.work.title"
                   class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
                   loading="lazy"

@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     transpile: ["gsap"],
   },
 
-  modules: ["@nuxt/content", "@nuxtjs/i18n"],
+  modules: ["@nuxt/content", "@nuxtjs/i18n", "@nuxtjs/sanity"],
   content: {
     build: {
       markdown: {
@@ -49,5 +49,18 @@ export default defineNuxtConfig({
     defaultLocale: "en",
     strategy: "prefix_except_default",
     detectBrowserLanguage: false,
+  },
+  sanity: {
+    projectId: "yqe0a3j0",
+    dataset: "production",
+    apiVersion: "2025-10-01",
+  },
+  runtimeConfig: {
+    SANITY_TOKEN: process.env.SANITY_TOKEN,
+    public: {
+      SANITY_PROJECT_ID: process.env.SANITY_PROJECT_ID,
+      SANITY_DATASET: process.env.SANITY_DATASET,
+      SANITY_API_VERSION: process.env.SANITY_API_VERSION,
+    },
   },
 });
