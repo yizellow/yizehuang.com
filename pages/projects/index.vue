@@ -31,7 +31,6 @@ const { data: worksData } = await useFetch<Work[]>("/api/works", {
 });
 
 const worksList = computed<Work[]>(() => worksData.value ?? []);
-
 const isClient = typeof window !== "undefined";
 
 const container = ref<HTMLElement | null>(null);
@@ -50,16 +49,23 @@ let currentY = 0;
 const ease = 0.1;
 
 let ro: ResizeObserver | null = null;
-
 const TOP_PAD = 96;
+
+let smoothEnabled = false;
+
+/** ===== init gate（避免首次高度未穩）===== */
+let viewReady = false;
+const afterPaint = () =>
+  new Promise<void>((r) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => r())),
+  );
 
 const syncSpacer = () => {
   if (!isClient) return;
+  if (active.value !== "all") return;
   if (!container.value || !spacer.value) return;
 
-  const pad = active.value === "all" ? TOP_PAD : 0;
-
-  spacer.value.style.paddingTop = `${pad}px`;
+  spacer.value.style.paddingTop = `${TOP_PAD}px`;
   spacer.value.style.height = `${container.value.scrollHeight}px`;
 };
 
@@ -75,8 +81,13 @@ const onScrollSmooth = () => {
 
 const enableAllSmooth = async () => {
   if (!isClient) return;
+  if (smoothEnabled) return;
+  if (active.value !== "all") return;
+
   await nextTick();
   if (!container.value) return;
+
+  smoothEnabled = true;
 
   container.value.style.position = "fixed";
   container.value.style.top = `${TOP_PAD}px`;
@@ -101,6 +112,8 @@ const enableAllSmooth = async () => {
 
 const disableAllSmooth = () => {
   if (!isClient) return;
+
+  smoothEnabled = false;
 
   window.removeEventListener("scroll", onScrollSmooth);
   cancelAnimationFrame(rafId);
@@ -133,6 +146,7 @@ const loadMoreAll = async () => {
   allSlides.value = [...allSlides.value, ...worksList.value];
 
   await nextTick();
+  await afterPaint();
   syncSpacer();
 
   if (isClient) {
@@ -153,13 +167,8 @@ const normalizedWorks = computed(() =>
   })),
 );
 
-const filteredWorks = computed(() => {
-  if (active.value === "all") return normalizedWorks.value;
-  return normalizedWorks.value.filter((w) => w.group === active.value);
-});
-
-/** ===== stage 拆分（通用）===== */
-const splitStage = (list: any[]) => {
+/** ===== stage 拆分 ===== */
+const splitStage = (list: Work[]) => {
   const main = list.filter((w) => w.stage !== "in-progress");
   const prog = list.filter((w) => w.stage === "in-progress");
   return { main, prog };
@@ -167,13 +176,8 @@ const splitStage = (list: any[]) => {
 
 /** ===== stream item ===== */
 type StreamItem =
-  | {
-      type: "header";
-      key: string;
-      label: string;
-      kind: "group" | "progress";
-    }
-  | { type: "work"; key: string; work: any };
+  | { type: "header"; key: string; label: string; kind: "group" | "progress" }
+  | { type: "work"; key: string; work: Work };
 
 const groupLabel = (g: string) => {
   if (g === "sics") return "Single in Cuffing Season";
@@ -182,12 +186,12 @@ const groupLabel = (g: string) => {
   return g;
 };
 
-/** ===== All：每個主題都支援 IN PROGRESS ===== */
-const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
+/** ===== ALL：每個主題都支援 IN PROGRESS ===== */
+const toSegmentStream = (list: Work[], roundKey: string): StreamItem[] => {
   const byGroup = (g: string) =>
     list.filter((w) => (w.group ?? "uncategorized") === g);
 
-  const groups: Array<{ g: string; sort?: (a: any, b: any) => number }> = [
+  const groups: Array<{ g: string; sort?: (a: Work, b: Work) => number }> = [
     { g: "sics" },
     { g: "before2025", sort: (a, b) => Number(b.year) - Number(a.year) },
     { g: "uncategorized" },
@@ -212,7 +216,7 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
     main.forEach((w, i) =>
       out.push({
         type: "work",
-        key: `w-${roundKey}-${g}-m-${w.slug}-${i}`,
+        key: `w-${roundKey}-${g}-m-${w._id ?? w.slug ?? i}`,
         work: w,
       }),
     );
@@ -228,7 +232,7 @@ const toSegmentStream = (list: any[], roundKey: string): StreamItem[] => {
       prog.forEach((w, i) =>
         out.push({
           type: "work",
-          key: `w-${roundKey}-${g}-p-${w.slug}-${i}`,
+          key: `w-${roundKey}-${g}-p-${w._id ?? w.slug ?? i}`,
           work: w,
         }),
       );
@@ -251,7 +255,7 @@ const allRenderStream = computed<StreamItem[]>(() => {
   return out;
 });
 
-/** ===== 非 ALL：同樣支援 IN PROGRESS（且 before2025 依年份排序）===== */
+/** ===== 非 ALL：同樣支援 IN PROGRESS ===== */
 const tabRenderStream = computed<StreamItem[]>(() => {
   if (active.value === "all") return [];
 
@@ -261,11 +265,11 @@ const tabRenderStream = computed<StreamItem[]>(() => {
     list = [...list].sort((a, b) => Number(b.year) - Number(a.year));
   }
 
-  const { main, prog } = splitStage(list);
+  const { main, prog } = splitStage(list as Work[]);
   const out: StreamItem[] = [];
 
   main.forEach((w, i) =>
-    out.push({ type: "work", key: `t-m-${w.slug}-${i}`, work: w }),
+    out.push({ type: "work", key: `t-m-${w._id ?? w.slug ?? i}`, work: w }),
   );
 
   if (prog.length) {
@@ -277,7 +281,7 @@ const tabRenderStream = computed<StreamItem[]>(() => {
     });
 
     prog.forEach((w, i) =>
-      out.push({ type: "work", key: `t-p-${w.slug}-${i}`, work: w }),
+      out.push({ type: "work", key: `t-p-${w._id ?? w.slug ?? i}`, work: w }),
     );
   }
 
@@ -289,6 +293,7 @@ let ticking = false;
 
 const checkNearBottom = () => {
   if (!isClient) return;
+  if (!viewReady) return;
   if (active.value !== "all") return;
 
   const doc = document.documentElement;
@@ -296,9 +301,7 @@ const checkNearBottom = () => {
   const viewport = window.innerHeight;
   const full = doc.scrollHeight;
 
-  if (full - (scrollTop + viewport) < 800) {
-    loadMoreAll();
-  }
+  if (full - (scrollTop + viewport) < 800) loadMoreAll();
 };
 
 const onScrollEndless = () => {
@@ -312,51 +315,63 @@ const onScrollEndless = () => {
   });
 };
 
-/** 初始化：資料到齊後，ALL 頁先塞一次 */
+/** ===== ALL 初始化（等高度穩再開 smooth / endless）===== */
+const initAll = async () => {
+  if (!isClient) return;
+  if (!worksList.value.length) return;
+
+  viewReady = false;
+
+  disableAllSmooth();
+
+  allSlides.value = [...worksList.value];
+
+  await nextTick();
+  await afterPaint();
+  syncSpacer();
+
+  await nextTick();
+  await enableAllSmooth();
+
+  viewReady = true;
+  window.requestAnimationFrame(() => checkNearBottom());
+};
+
+/** 初始化：資料到齊後，若在 ALL 就 initAll */
 watch(
   worksList,
   async (list) => {
     if (!list.length) return;
-    if (active.value === "all") {
-      allSlides.value = [...list];
-      await nextTick();
-      if (isClient) {
-        await enableAllSmooth();
-        window.requestAnimationFrame(() => checkNearBottom());
-      }
-    }
+    if (active.value === "all") await initAll();
   },
-  { immediate: true },
+  { immediate: true, flush: "post" },
 );
 
-/** tab 切換：All 啟用 smooth + endless，其它關閉 smooth */
+/** tab 切換：先關閉 smooth，再決定是否 initAll */
 watch(
   active,
   async (v) => {
     if (!isClient) return;
 
+    viewReady = false;
+    disableAllSmooth();
+    await nextTick();
+
     if (v === "all") {
-      allSlides.value = [...worksList.value];
-      await nextTick();
-      await enableAllSmooth();
-      window.requestAnimationFrame(() => checkNearBottom());
-    } else {
-      disableAllSmooth();
+      await initAll();
     }
   },
-  { immediate: true },
+  { immediate: true, flush: "post" },
 );
 
 onMounted(() => {
   if (!isClient) return;
-
   window.addEventListener("scroll", onScrollEndless, { passive: true });
   window.requestAnimationFrame(() => checkNearBottom());
 });
 
 onBeforeUnmount(() => {
   if (!isClient) return;
-
   window.removeEventListener("scroll", onScrollEndless);
   disableAllSmooth();
 });
@@ -364,7 +379,8 @@ onBeforeUnmount(() => {
 
 <template>
   <TopBanner />
-  <div ref="spacer" aria-hidden="true"></div>
+  <!-- ✅ spacer 只在 ALL 存在，避免其他分頁巨大空格 -->
+  <div v-if="active === 'all'" ref="spacer" aria-hidden="true"></div>
 
   <!-- Bottom Tabbar -->
   <div
@@ -398,7 +414,7 @@ onBeforeUnmount(() => {
       >
         Before 2025
       </button>
-      <button
+      <!-- <button
         class="px-4 py-2 text-xs silkscreen"
         :class="
           active === 'uncategorized'
@@ -408,7 +424,7 @@ onBeforeUnmount(() => {
         @click="active = 'uncategorized'"
       >
         Uncategorized
-      </button>
+      </button> -->
     </div>
   </div>
 
@@ -455,6 +471,7 @@ onBeforeUnmount(() => {
                   :alt="item.work.title"
                   class="w-full h-auto object-cover hover:rounded-4xl transition-all duration-150"
                   loading="lazy"
+                  @load="syncSpacer()"
                 />
               </div>
 
