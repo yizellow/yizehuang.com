@@ -4,11 +4,14 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { slug } = getRouterParams(event) as { slug: string };
 
-  const projectId = config.sanityProjectId;
-  const dataset = config.sanityDataset;
-  const apiVersion = config.sanityApiVersion;
+  const projectId = config.public.sanityProjectId;
+  const dataset = config.public.sanityDataset;
+  const apiVersion = config.public.sanityApiVersion;
   const token = config.sanityToken;
 
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing slug" });
+  }
   if (!projectId || !dataset || !apiVersion) {
     throw createError({
       statusCode: 500,
