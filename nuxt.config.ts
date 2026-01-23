@@ -53,12 +53,15 @@ export default defineNuxtConfig({
   sanity: {
     projectId: "yqe0a3j0",
     dataset: "production",
-    apiVersion: "2025-10-01",
+    apiVersion: "2025-02-19",
   },
   runtimeConfig: {
     sanityToken: process.env.SANITY_TOKEN,
-    sanityProjectId: process.env.SANITY_PROJECT_ID,
-    sanityDataset: process.env.SANITY_DATASET,
-    sanityApiVersion: process.env.SANITY_API_VERSION,
+
+    public: {
+      sanityProjectId: process.env.SANITY_PROJECT_ID,
+      sanityDataset: process.env.SANITY_DATASET,
+      sanityApiVersion: process.env.SANITY_API_VERSION,
+    },
   },
 });
