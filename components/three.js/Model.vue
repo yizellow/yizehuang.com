@@ -61,13 +61,13 @@ function applyCameraFromProps() {
   camera.position.set(
     props.cameraPosition.x,
     props.cameraPosition.y,
-    props.cameraPosition.z
+    props.cameraPosition.z,
   );
   if (controls) {
     controls.target.set(
       props.controlsTarget.x,
       props.controlsTarget.y,
-      props.controlsTarget.z
+      props.controlsTarget.z,
     );
     controls.update();
   }
@@ -78,7 +78,7 @@ function applyModelTransformFromProps() {
   model.position.set(
     props.modelPosition.x,
     props.modelPosition.y,
-    props.modelPosition.z
+    props.modelPosition.z,
   );
   if (typeof props.modelScale === "number") {
     model.scale.set(props.modelScale, props.modelScale, props.modelScale);
@@ -86,7 +86,7 @@ function applyModelTransformFromProps() {
     model.scale.set(
       props.modelScale.x ?? 1,
       props.modelScale.y ?? 1,
-      props.modelScale.z ?? 1
+      props.modelScale.z ?? 1,
     );
   }
   model.rotation.y = (props.rotationY * Math.PI) / 180;
@@ -111,7 +111,7 @@ function logTransforms() {
   });
   const camEuler = new THREE.Euler().setFromQuaternion(
     camera.quaternion,
-    "XYZ"
+    "XYZ",
   );
   const payload = {
     cameraPosition: to3(camera.position),
@@ -146,13 +146,13 @@ onMounted(() => {
     75,
     (container.value.clientWidth || 1) / (container.value.clientHeight || 1),
     0.1,
-    1000
+    1000,
   );
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(
     container.value.clientWidth,
-    container.value.clientHeight || 1
+    container.value.clientHeight || 1,
   );
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
@@ -183,13 +183,14 @@ onMounted(() => {
       applyModelTransformFromProps();
     },
     undefined,
-    (err) => console.error("GLB 載入失敗：", err)
+    (err) => console.error("GLB 載入失敗：", err),
   );
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enabled = props.enableOrbit;
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
+  controls.enableZoom = false;
 
   applyCameraFromProps();
 
