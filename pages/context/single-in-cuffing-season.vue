@@ -74,7 +74,7 @@ const toc = computed<TocItem[]>(() =>
           </ul>
           <div class="mt-6">
             <NuxtLink
-              to="https://community.yizehuang.com/subscribe"
+              to="https://preview.mailerlite.io/forms/2113891/179942476785649185/share"
               external
               target="_blank"
               rel="noopener"
