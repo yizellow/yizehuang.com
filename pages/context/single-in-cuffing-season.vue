@@ -18,6 +18,7 @@ const articleList = [
   { slug: "marriage-as-a-matter-of-course" },
   { slug: "the-one-who-loves-me-and-the-one-i-love-are-not-the-same" },
   { slug: "a-seashell-and-a-copied-love" },
+  { slug: "death-is-getting-closer-and-im-still-single" },
 ] as const;
 
 const paths = computed(() => articleList.map((a) => `${base.value}/${a.slug}`));
